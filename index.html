@@ -428,9 +428,11 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
+  min-width: 36px;
+  width: auto;
+  padding: 0 4px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: 18px;
   font-weight: 800;
   font-size: 0.88em;
   color: #fff;
@@ -440,8 +442,8 @@ body {
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .ball-glass:hover { transform: scale(1.12); }
-.ball-glass.ball-sm { width: 30px; height: 30px; font-size: 0.78em; margin: 2px; }
-.ball-glass.ball-lg { width: 48px; height: 48px; font-size: 1.15em; margin: 4px; }
+.ball-glass.ball-sm { min-width: 30px; width: auto; height: 30px; padding: 0 5px; font-size: 0.78em; margin: 2px; border-radius: 15px; }
+.ball-glass.ball-lg { min-width: 48px; width: auto; height: 48px; padding: 0 8px; font-size: 1.15em; margin: 4px; border-radius: 24px; }
 .ball-glass.hot { background: var(--hot-gradient); box-shadow: 0 6px 14px -3px rgba(244, 63, 94, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.6); }
 .ball-glass.cold { background: var(--cold-gradient); box-shadow: 0 6px 14px -3px rgba(14, 165, 233, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.6); }
 .ball-glass.overdue { background: var(--overdue-gradient); box-shadow: 0 6px 14px -3px rgba(245, 158, 11, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.6); }
@@ -1156,67 +1158,111 @@ let currentTab = 'smartpick';
 let currentMode = 'balanced';
 let currentPickedNumbers = [];
 let userSelectedPicker = new Set();
-const DAEMON_URL = 'http://127.0.0.1:8899';
+const DEFAULT_OFFICIAL_DATA = {"power655": [{"id": "01410", "date": "2026-10-13", "numbers": [2, 14, 27, 40, 50, 53], "special": 26}, {"id": "01409", "date": "2026-10-10", "numbers": [18, 19, 32, 47, 52, 55], "special": 31}, {"id": "01408", "date": "2026-10-08", "numbers": [7, 9, 35, 44, 48, 54], "special": 6}, {"id": "01407", "date": "2026-10-06", "numbers": [2, 3, 6, 14, 28, 38], "special": 15}, {"id": "01406", "date": "2026-10-03", "numbers": [2, 13, 33, 36, 39, 46], "special": 42}, {"id": "01405", "date": "2026-10-01", "numbers": [15, 27, 29, 35, 38, 45], "special": 18}, {"id": "01404", "date": "2026-09-29", "numbers": [1, 11, 45, 49, 52, 55], "special": 28}, {"id": "01403", "date": "2026-09-26", "numbers": [10, 14, 18, 22, 49, 55], "special": 7}, {"id": "01402", "date": "2026-09-24", "numbers": [6, 7, 23, 25, 39, 52], "special": 17}, {"id": "01401", "date": "2026-09-22", "numbers": [3, 8, 30, 35, 47, 52], "special": 25}, {"id": "01400", "date": "2026-09-19", "numbers": [6, 19, 24, 36, 40, 41], "special": 37}, {"id": "01399", "date": "2026-09-17", "numbers": [3, 5, 13, 15, 43, 46], "special": 50}, {"id": "01398", "date": "2026-09-15", "numbers": [6, 7, 15, 18, 19, 25], "special": 30}, {"id": "01397", "date": "2026-09-12", "numbers": [11, 23, 24, 41, 53, 54], "special": 14}, {"id": "01396", "date": "2026-09-10", "numbers": [5, 18, 42, 43, 44, 45], "special": 39}, {"id": "01395", "date": "2026-09-08", "numbers": [11, 16, 35, 41, 47, 54], "special": 30}, {"id": "01394", "date": "2026-09-05", "numbers": [15, 18, 25, 36, 41, 45], "special": 44}, {"id": "01393", "date": "2026-09-03", "numbers": [4, 15, 21, 50, 53, 54], "special": 53}, {"id": "01392", "date": "2026-09-01", "numbers": [3, 5, 18, 21, 26, 52], "special": 14}, {"id": "01391", "date": "2026-08-29", "numbers": [14, 21, 32, 37, 42, 46], "special": 26}, {"id": "01390", "date": "2026-08-27", "numbers": [9, 10, 16, 17, 30, 42], "special": 48}, {"id": "01389", "date": "2026-08-25", "numbers": [17, 28, 35, 36, 38, 48], "special": 38}, {"id": "01388", "date": "2026-08-22", "numbers": [9, 15, 24, 26, 32, 33], "special": 6}, {"id": "01387", "date": "2026-08-20", "numbers": [4, 8, 10, 11, 41, 49], "special": 51}, {"id": "01386", "date": "2026-08-18", "numbers": [5, 25, 28, 39, 44, 51], "special": 39}, {"id": "01385", "date": "2026-08-15", "numbers": [1, 17, 30, 34, 36, 44], "special": 47}, {"id": "01384", "date": "2026-08-13", "numbers": [8, 18, 35, 44, 49, 50], "special": 42}, {"id": "01383", "date": "2026-08-11", "numbers": [8, 11, 19, 22, 28, 30], "special": 1}, {"id": "01382", "date": "2026-08-08", "numbers": [12, 17, 33, 47, 49, 55], "special": 33}, {"id": "01381", "date": "2026-08-06", "numbers": [7, 20, 33, 39, 41, 54], "special": 13}, {"id": "01380", "date": "2026-08-04", "numbers": [10, 11, 24, 35, 49, 50], "special": 34}, {"id": "01379", "date": "2026-08-01", "numbers": [1, 2, 8, 21, 32, 39], "special": 24}, {"id": "01378", "date": "2026-07-30", "numbers": [4, 16, 20, 52, 54, 55], "special": 37}, {"id": "01377", "date": "2026-07-28", "numbers": [5, 6, 32, 47, 49, 55], "special": 35}, {"id": "01376", "date": "2026-07-25", "numbers": [9, 31, 36, 43, 50, 54], "special": 11}], "mega645": [{"id": "01574", "date": "2026-10-11", "numbers": [3, 9, 16, 29, 30, 44]}, {"id": "01573", "date": "2026-10-09", "numbers": [5, 7, 12, 23, 32, 41]}, {"id": "01572", "date": "2026-10-07", "numbers": [6, 17, 18, 25, 27, 31]}, {"id": "01571", "date": "2026-10-04", "numbers": [2, 4, 5, 15, 23, 35]}, {"id": "01570", "date": "2026-10-02", "numbers": [2, 3, 13, 16, 42, 43]}, {"id": "01569", "date": "2026-09-30", "numbers": [8, 9, 10, 16, 31, 40]}, {"id": "01568", "date": "2026-09-27", "numbers": [11, 14, 17, 24, 30, 37]}, {"id": "01567", "date": "2026-09-25", "numbers": [7, 8, 11, 20, 39, 45]}, {"id": "01566", "date": "2026-09-23", "numbers": [2, 20, 25, 26, 37, 38]}, {"id": "01565", "date": "2026-09-20", "numbers": [5, 7, 13, 16, 38, 41]}, {"id": "01564", "date": "2026-09-18", "numbers": [3, 8, 20, 37, 39, 45]}, {"id": "01563", "date": "2026-09-16", "numbers": [5, 23, 24, 28, 33, 35]}, {"id": "01562", "date": "2026-09-13", "numbers": [1, 7, 22, 27, 32, 42]}, {"id": "01561", "date": "2026-09-11", "numbers": [10, 24, 28, 30, 41, 45]}, {"id": "01560", "date": "2026-09-09", "numbers": [12, 18, 34, 35, 40, 42]}, {"id": "01559", "date": "2026-09-06", "numbers": [18, 21, 28, 30, 31, 38]}, {"id": "01558", "date": "2026-09-04", "numbers": [6, 16, 18, 29, 30, 45]}, {"id": "01557", "date": "2026-09-02", "numbers": [2, 22, 25, 37, 40, 43]}, {"id": "01556", "date": "2026-08-30", "numbers": [12, 14, 21, 23, 32, 45]}, {"id": "01555", "date": "2026-08-28", "numbers": [17, 18, 22, 36, 39, 43]}, {"id": "01554", "date": "2026-08-26", "numbers": [1, 6, 13, 16, 27, 34]}, {"id": "01553", "date": "2026-08-23", "numbers": [16, 29, 31, 32, 36, 45]}, {"id": "01552", "date": "2026-08-21", "numbers": [2, 6, 15, 16, 19, 26]}, {"id": "01551", "date": "2026-08-19", "numbers": [20, 24, 31, 36, 38, 43]}, {"id": "01550", "date": "2026-08-16", "numbers": [22, 23, 28, 34, 36, 44]}, {"id": "01549", "date": "2026-08-14", "numbers": [15, 17, 18, 20, 30, 45]}, {"id": "01548", "date": "2026-08-12", "numbers": [8, 12, 13, 21, 35, 45]}, {"id": "01547", "date": "2026-08-09", "numbers": [13, 14, 18, 31, 34, 38]}, {"id": "01546", "date": "2026-08-07", "numbers": [7, 13, 15, 19, 39, 44]}, {"id": "01545", "date": "2026-08-05", "numbers": [1, 9, 12, 20, 24, 35]}, {"id": "01544", "date": "2026-08-02", "numbers": [3, 4, 9, 18, 19, 36]}, {"id": "01543", "date": "2026-07-31", "numbers": [1, 7, 19, 32, 37, 41]}, {"id": "01542", "date": "2026-07-29", "numbers": [4, 12, 22, 29, 31, 45]}, {"id": "01541", "date": "2026-07-26", "numbers": [5, 8, 17, 26, 31, 32]}, {"id": "01540", "date": "2026-07-24", "numbers": [4, 5, 10, 37, 41, 43]}], "lotto535": [{"id": "00944", "date": "2026-10-13", "numbers": [1, 2, 10, 32, 33], "special": 9}, {"id": "00943", "date": "2026-10-13", "numbers": [9, 13, 16, 22, 25], "special": 33}, {"id": "00942", "date": "2026-10-12", "numbers": [5, 8, 15, 21, 30], "special": 12}, {"id": "00941", "date": "2026-10-10", "numbers": [5, 6, 9, 10, 21], "special": 18}, {"id": "00940", "date": "2026-10-09", "numbers": [19, 21, 25, 30, 34], "special": 33}, {"id": "00939", "date": "2026-10-08", "numbers": [7, 8, 14, 28, 29], "special": 15}, {"id": "00938", "date": "2026-10-07", "numbers": [7, 22, 26, 27, 30], "special": 21}, {"id": "00937", "date": "2026-10-06", "numbers": [10, 17, 21, 24, 28], "special": 31}, {"id": "00936", "date": "2026-10-05", "numbers": [5, 6, 7, 24, 28], "special": 9}, {"id": "00935", "date": "2026-10-04", "numbers": [4, 8, 22, 23, 27], "special": 28}, {"id": "00934", "date": "2026-10-03", "numbers": [4, 7, 19, 20, 23], "special": 33}, {"id": "00933", "date": "2026-10-02", "numbers": [7, 10, 14, 15, 31], "special": 23}, {"id": "00932", "date": "2026-10-01", "numbers": [8, 15, 18, 24, 28], "special": 2}, {"id": "00931", "date": "2026-09-30", "numbers": [2, 12, 18, 20, 22], "special": 23}, {"id": "00930", "date": "2026-09-29", "numbers": [1, 5, 10, 12, 26], "special": 10}, {"id": "00929", "date": "2026-09-28", "numbers": [2, 6, 14, 25, 34], "special": 27}, {"id": "00928", "date": "2026-09-27", "numbers": [11, 20, 22, 24, 30], "special": 21}, {"id": "00927", "date": "2026-09-26", "numbers": [4, 6, 10, 11, 18], "special": 29}, {"id": "00926", "date": "2026-09-25", "numbers": [18, 27, 28, 29, 32], "special": 14}, {"id": "00925", "date": "2026-09-24", "numbers": [8, 19, 23, 28, 33], "special": 32}, {"id": "00924", "date": "2026-09-23", "numbers": [3, 15, 20, 26, 34], "special": 4}, {"id": "00923", "date": "2026-09-22", "numbers": [1, 9, 14, 17, 20], "special": 19}, {"id": "00922", "date": "2026-09-21", "numbers": [1, 8, 21, 28, 32], "special": 12}, {"id": "00921", "date": "2026-09-20", "numbers": [9, 15, 25, 33, 35], "special": 23}, {"id": "00920", "date": "2026-09-19", "numbers": [2, 3, 5, 26, 28], "special": 30}, {"id": "00919", "date": "2026-09-18", "numbers": [5, 21, 26, 27, 28], "special": 19}, {"id": "00918", "date": "2026-09-17", "numbers": [2, 8, 11, 21, 26], "special": 30}, {"id": "00917", "date": "2026-09-16", "numbers": [6, 7, 16, 24, 28], "special": 28}, {"id": "00916", "date": "2026-09-15", "numbers": [6, 20, 22, 26, 34], "special": 15}, {"id": "00915", "date": "2026-09-14", "numbers": [5, 8, 11, 22, 33], "special": 34}, {"id": "00914", "date": "2026-09-13", "numbers": [10, 13, 16, 23, 33], "special": 7}, {"id": "00913", "date": "2026-09-12", "numbers": [5, 10, 12, 13, 17], "special": 12}, {"id": "00912", "date": "2026-09-11", "numbers": [10, 21, 29, 30, 32], "special": 29}, {"id": "00911", "date": "2026-09-10", "numbers": [5, 18, 20, 29, 31], "special": 4}, {"id": "00910", "date": "2026-09-09", "numbers": [5, 20, 23, 30, 33], "special": 29}], "max3d": [{"id": "01144", "date": "2026-10-12", "numbers": [130, 306, 256, 353]}, {"id": "01143", "date": "2026-10-09", "numbers": [299, 307, 32, 203]}, {"id": "01142", "date": "2026-10-07", "numbers": [415, 682, 109, 547]}, {"id": "01141", "date": "2026-10-05", "numbers": [607, 501, 184, 546]}, {"id": "01140", "date": "2026-10-02", "numbers": [654, 748, 644, 803]}, {"id": "01139", "date": "2026-09-30", "numbers": [871, 399, 161, 851]}, {"id": "01138", "date": "2026-09-28", "numbers": [707, 258, 42, 596]}, {"id": "01137", "date": "2026-09-25", "numbers": [980, 727, 122, 205]}, {"id": "01136", "date": "2026-09-23", "numbers": [29, 461, 331, 438]}, {"id": "01135", "date": "2026-09-21", "numbers": [165, 432, 717, 218]}, {"id": "01134", "date": "2026-09-18", "numbers": [430, 523, 803, 636]}, {"id": "01133", "date": "2026-09-16", "numbers": [952, 492, 903, 878]}, {"id": "01132", "date": "2026-09-14", "numbers": [763, 754, 73, 732]}, {"id": "01131", "date": "2026-09-11", "numbers": [151, 541, 222, 584]}, {"id": "01130", "date": "2026-09-09", "numbers": [342, 688, 499, 548]}, {"id": "01129", "date": "2026-09-07", "numbers": [395, 331, 989, 187]}, {"id": "01128", "date": "2026-09-04", "numbers": [480, 944, 555, 360]}, {"id": "01127", "date": "2026-09-02", "numbers": [569, 372, 702, 800]}, {"id": "01126", "date": "2026-08-31", "numbers": [898, 748, 707, 668]}, {"id": "01125", "date": "2026-08-28", "numbers": [832, 719, 280, 634]}, {"id": "01124", "date": "2026-08-26", "numbers": [505, 206, 990, 262]}, {"id": "01123", "date": "2026-08-24", "numbers": [295, 581, 315, 240]}, {"id": "01122", "date": "2026-08-21", "numbers": [974, 314, 799, 305]}, {"id": "01121", "date": "2026-08-19", "numbers": [731, 222, 716, 731]}, {"id": "01120", "date": "2026-08-17", "numbers": [510, 334, 501, 367]}, {"id": "01119", "date": "2026-08-14", "numbers": [583, 966, 966, 824]}, {"id": "01118", "date": "2026-08-12", "numbers": [748, 290, 304, 134]}, {"id": "01117", "date": "2026-08-10", "numbers": [597, 702, 566, 398]}, {"id": "01116", "date": "2026-08-07", "numbers": [927, 414, 848, 363]}, {"id": "01115", "date": "2026-08-05", "numbers": [987, 801, 833, 159]}, {"id": "01114", "date": "2026-08-03", "numbers": [307, 53, 304, 988]}, {"id": "01113", "date": "2026-07-31", "numbers": [741, 90, 364, 956]}, {"id": "01112", "date": "2026-07-29", "numbers": [462, 681, 272, 775]}, {"id": "01111", "date": "2026-07-27", "numbers": [500, 229, 216, 857]}, {"id": "01110", "date": "2026-07-24", "numbers": [561, 287, 965, 585]}], "max3dpro": [{"id": "00791", "date": "2026-10-13", "numbers": [678, 585, 332, 576, 634, 609]}, {"id": "00790", "date": "2026-10-10", "numbers": [123, 456, 789, 234, 567, 890]}, {"id": "00789", "date": "2026-10-08", "numbers": [203, 969, 906, 752, 793, 125]}, {"id": "00788", "date": "2026-10-06", "numbers": [42, 838, 686, 439, 639, 794]}, {"id": "00787", "date": "2026-10-03", "numbers": [968, 914, 920, 26, 256, 221]}, {"id": "00786", "date": "2026-10-01", "numbers": [78, 113, 618, 44, 467, 622]}, {"id": "00785", "date": "2026-09-29", "numbers": [698, 730, 903, 59, 260, 768]}, {"id": "00784", "date": "2026-09-26", "numbers": [55, 421, 459, 249, 562, 232]}, {"id": "00783", "date": "2026-09-24", "numbers": [782, 894, 804, 67, 153, 525]}, {"id": "00782", "date": "2026-09-22", "numbers": [306, 249, 845, 948, 759, 599]}, {"id": "00781", "date": "2026-09-19", "numbers": [336, 601, 622, 801, 698, 848]}, {"id": "00780", "date": "2026-09-17", "numbers": [338, 252, 319, 907, 156, 686]}, {"id": "00779", "date": "2026-09-15", "numbers": [543, 236, 433, 317, 291, 72]}, {"id": "00778", "date": "2026-09-12", "numbers": [580, 981, 615, 910, 762, 943]}, {"id": "00777", "date": "2026-09-10", "numbers": [189, 651, 705, 447, 579, 517]}, {"id": "00776", "date": "2026-09-08", "numbers": [58, 362, 974, 668, 697, 400]}, {"id": "00775", "date": "2026-09-05", "numbers": [814, 547, 336, 723, 436, 428]}, {"id": "00774", "date": "2026-09-03", "numbers": [162, 317, 395, 198, 782, 560]}, {"id": "00773", "date": "2026-09-01", "numbers": [494, 256, 879, 240, 317, 888]}, {"id": "00772", "date": "2026-08-29", "numbers": [734, 157, 835, 484, 946, 69]}, {"id": "00771", "date": "2026-08-27", "numbers": [585, 432, 436, 580, 552, 147]}, {"id": "00770", "date": "2026-08-25", "numbers": [407, 258, 271, 218, 348, 672]}, {"id": "00769", "date": "2026-08-22", "numbers": [90, 954, 470, 877, 389, 104]}, {"id": "00768", "date": "2026-08-20", "numbers": [558, 751, 859, 205, 62, 284]}, {"id": "00767", "date": "2026-08-18", "numbers": [396, 699, 629, 627, 50, 904]}, {"id": "00766", "date": "2026-08-15", "numbers": [84, 202, 833, 789, 611, 751]}, {"id": "00765", "date": "2026-08-13", "numbers": [697, 582, 232, 500, 223, 900]}, {"id": "00764", "date": "2026-08-11", "numbers": [938, 350, 320, 989, 940, 25]}, {"id": "00763", "date": "2026-08-08", "numbers": [226, 969, 204, 995, 769, 130]}, {"id": "00762", "date": "2026-08-06", "numbers": [774, 782, 500, 946, 258, 722]}, {"id": "00761", "date": "2026-08-04", "numbers": [628, 730, 219, 416, 947, 255]}, {"id": "00760", "date": "2026-08-01", "numbers": [575, 339, 804, 299, 399, 487]}, {"id": "00759", "date": "2026-07-30", "numbers": [556, 674, 377, 325, 277, 378]}, {"id": "00758", "date": "2026-07-28", "numbers": [535, 913, 519, 487, 110, 832]}, {"id": "00757", "date": "2026-07-25", "numbers": [749, 490, 789, 869, 337, 946]}], "bingo18": [{"id": "0191135", "date": "2026-10-14", "numbers": [2, 2, 6]}, {"id": "0191134", "date": "2026-10-14", "numbers": [3, 6, 6]}, {"id": "0191133", "date": "2026-10-14", "numbers": [1, 2, 2]}, {"id": "0191132", "date": "2026-10-14", "numbers": [1, 4, 5]}, {"id": "0191131", "date": "2026-10-14", "numbers": [3, 3, 4]}, {"id": "0191130", "date": "2026-10-14", "numbers": [5, 5, 6]}, {"id": "0191129", "date": "2026-10-14", "numbers": [4, 5, 6]}, {"id": "0191128", "date": "2026-10-14", "numbers": [2, 5, 6]}, {"id": "0191127", "date": "2026-10-14", "numbers": [1, 3, 4]}, {"id": "0191126", "date": "2026-10-14", "numbers": [1, 3, 4]}, {"id": "0191125", "date": "2026-10-14", "numbers": [1, 1, 6]}, {"id": "0191124", "date": "2026-10-14", "numbers": [2, 3, 3]}, {"id": "0191123", "date": "2026-10-14", "numbers": [2, 3, 4]}, {"id": "0191122", "date": "2026-10-14", "numbers": [3, 4, 5]}, {"id": "0191121", "date": "2026-10-14", "numbers": [1, 4, 4]}, {"id": "0191120", "date": "2026-10-14", "numbers": [4, 6, 6]}, {"id": "0191119", "date": "2026-10-14", "numbers": [1, 3, 3]}, {"id": "0191118", "date": "2026-10-14", "numbers": [1, 1, 6]}, {"id": "0191117", "date": "2026-10-14", "numbers": [1, 3, 6]}, {"id": "0191116", "date": "2026-10-14", "numbers": [1, 2, 6]}, {"id": "0191115", "date": "2026-10-14", "numbers": [2, 5, 6]}, {"id": "0191114", "date": "2026-10-14", "numbers": [2, 2, 5]}, {"id": "0191113", "date": "2026-10-14", "numbers": [3, 4, 5]}, {"id": "0191112", "date": "2026-10-14", "numbers": [2, 4, 4]}, {"id": "0191111", "date": "2026-10-14", "numbers": [2, 2, 6]}, {"id": "0191110", "date": "2026-10-14", "numbers": [4, 6, 6]}, {"id": "0191109", "date": "2026-10-14", "numbers": [1, 4, 6]}, {"id": "0191108", "date": "2026-10-14", "numbers": [2, 4, 5]}, {"id": "0191107", "date": "2026-10-14", "numbers": [4, 4, 5]}, {"id": "0191106", "date": "2026-10-14", "numbers": [1, 2, 6]}, {"id": "0191105", "date": "2026-10-14", "numbers": [2, 3, 6]}, {"id": "0191104", "date": "2026-10-14", "numbers": [1, 1, 5]}, {"id": "0191103", "date": "2026-10-14", "numbers": [2, 3, 5]}, {"id": "0191102", "date": "2026-10-14", "numbers": [2, 3, 4]}, {"id": "0191101", "date": "2026-10-14", "numbers": [1, 3, 6]}], "keno": [{"id": "0299192", "date": "2026-10-14", "numbers": [3, 5, 6, 15, 24, 27, 44, 45, 47, 49, 52, 53, 54, 56, 58, 65, 67, 70, 78, 80]}, {"id": "0299191", "date": "2026-10-14", "numbers": [2, 3, 9, 18, 20, 21, 27, 35, 45, 51, 53, 57, 58, 63, 64, 65, 70, 73, 75, 77]}, {"id": "0299190", "date": "2026-10-14", "numbers": [2, 5, 6, 11, 17, 19, 20, 22, 34, 36, 45, 47, 50, 52, 55, 57, 59, 62, 76, 78]}, {"id": "0299189", "date": "2026-10-14", "numbers": [2, 6, 10, 16, 17, 29, 30, 44, 47, 50, 52, 55, 57, 62, 67, 73, 76, 78, 79, 80]}, {"id": "0299188", "date": "2026-10-14", "numbers": [2, 9, 14, 18, 19, 20, 22, 27, 28, 39, 40, 41, 45, 48, 49, 57, 59, 68, 75, 80]}, {"id": "0299187", "date": "2026-10-14", "numbers": [4, 11, 12, 13, 16, 18, 28, 32, 36, 37, 41, 43, 45, 50, 55, 57, 63, 69, 72, 76]}, {"id": "0299186", "date": "2026-10-14", "numbers": [2, 7, 9, 10, 15, 21, 25, 27, 31, 38, 39, 47, 50, 51, 60, 64, 66, 67, 71, 72]}, {"id": "0299185", "date": "2026-10-14", "numbers": [2, 3, 6, 8, 9, 10, 23, 28, 33, 34, 37, 41, 46, 47, 50, 51, 54, 61, 70, 73]}, {"id": "0299184", "date": "2026-10-14", "numbers": [9, 11, 20, 27, 28, 36, 40, 42, 45, 51, 52, 54, 55, 66, 67, 69, 72, 74, 76, 77]}, {"id": "0299183", "date": "2026-10-14", "numbers": [2, 8, 12, 15, 16, 18, 21, 23, 31, 32, 34, 40, 45, 51, 56, 59, 63, 64, 69, 79]}, {"id": "0299182", "date": "2026-10-14", "numbers": [4, 9, 10, 16, 17, 22, 32, 34, 35, 43, 47, 48, 55, 59, 64, 68, 72, 74, 76, 80]}, {"id": "0299181", "date": "2026-10-14", "numbers": [1, 2, 6, 10, 14, 15, 21, 22, 25, 30, 32, 33, 47, 48, 59, 61, 66, 69, 73, 74]}, {"id": "0299180", "date": "2026-10-14", "numbers": [3, 5, 7, 10, 16, 23, 29, 32, 34, 35, 41, 42, 48, 52, 54, 65, 71, 76, 77, 80]}, {"id": "0299179", "date": "2026-10-14", "numbers": [2, 9, 12, 26, 32, 37, 38, 39, 40, 42, 48, 50, 52, 59, 60, 66, 68, 70, 71, 78]}, {"id": "0299178", "date": "2026-10-14", "numbers": [1, 2, 4, 14, 16, 20, 26, 27, 30, 32, 34, 40, 43, 45, 49, 53, 64, 70, 76, 79]}, {"id": "0299177", "date": "2026-10-14", "numbers": [4, 6, 8, 10, 11, 12, 13, 18, 19, 30, 36, 37, 38, 48, 51, 53, 59, 63, 65, 67]}, {"id": "0299176", "date": "2026-10-14", "numbers": [7, 10, 11, 14, 17, 18, 20, 26, 29, 30, 31, 34, 35, 38, 41, 42, 51, 56, 58, 75]}, {"id": "0299175", "date": "2026-10-14", "numbers": [6, 12, 16, 21, 27, 28, 34, 39, 40, 41, 46, 53, 54, 55, 58, 60, 67, 69, 77, 80]}, {"id": "0299174", "date": "2026-10-14", "numbers": [4, 7, 9, 12, 13, 14, 19, 23, 32, 34, 39, 46, 51, 52, 58, 60, 66, 69, 76, 78]}, {"id": "0299173", "date": "2026-10-14", "numbers": [2, 3, 8, 9, 10, 11, 12, 16, 17, 26, 29, 34, 48, 52, 54, 55, 57, 58, 75, 76]}, {"id": "0299172", "date": "2026-10-14", "numbers": [4, 6, 7, 16, 18, 22, 23, 24, 28, 29, 43, 46, 49, 51, 55, 56, 60, 63, 64, 74]}, {"id": "0299171", "date": "2026-10-14", "numbers": [3, 5, 8, 12, 18, 20, 25, 26, 32, 36, 38, 46, 50, 51, 53, 54, 62, 64, 71, 78]}, {"id": "0299170", "date": "2026-10-14", "numbers": [4, 8, 24, 29, 31, 34, 35, 36, 41, 42, 45, 46, 50, 52, 62, 63, 65, 69, 70, 73]}, {"id": "0299169", "date": "2026-10-14", "numbers": [8, 13, 21, 23, 29, 30, 31, 32, 35, 41, 45, 46, 48, 50, 52, 67, 69, 74, 75, 80]}, {"id": "0299168", "date": "2026-10-14", "numbers": [4, 5, 8, 12, 15, 19, 23, 25, 39, 40, 46, 63, 64, 67, 70, 73, 75, 76, 79, 80]}, {"id": "0299167", "date": "2026-10-14", "numbers": [1, 3, 8, 10, 15, 17, 19, 23, 24, 26, 42, 43, 44, 46, 47, 61, 62, 68, 79, 80]}, {"id": "0299166", "date": "2026-10-14", "numbers": [13, 18, 19, 21, 23, 29, 39, 40, 41, 42, 44, 45, 46, 47, 49, 51, 56, 63, 69, 76]}, {"id": "0299165", "date": "2026-10-14", "numbers": [1, 5, 10, 11, 14, 17, 19, 21, 23, 24, 29, 31, 41, 43, 45, 51, 63, 64, 73, 74]}, {"id": "0299164", "date": "2026-10-14", "numbers": [1, 2, 7, 9, 12, 14, 22, 27, 32, 33, 34, 43, 45, 50, 54, 57, 58, 66, 74, 75]}, {"id": "0299163", "date": "2026-10-14", "numbers": [3, 5, 10, 11, 13, 14, 21, 22, 29, 34, 38, 41, 45, 49, 58, 62, 69, 70, 74, 80]}, {"id": "0299162", "date": "2026-10-14", "numbers": [4, 7, 10, 12, 13, 21, 22, 25, 27, 36, 43, 44, 45, 49, 56, 62, 65, 71, 72, 79]}, {"id": "0299161", "date": "2026-10-14", "numbers": [1, 7, 12, 13, 20, 31, 34, 37, 38, 39, 41, 43, 47, 51, 53, 55, 63, 70, 71, 74]}, {"id": "0299160", "date": "2026-10-14", "numbers": [4, 11, 12, 13, 15, 22, 25, 26, 27, 34, 35, 38, 40, 42, 51, 61, 62, 63, 71, 77]}, {"id": "0299159", "date": "2026-10-14", "numbers": [6, 8, 11, 13, 20, 23, 24, 29, 34, 35, 43, 48, 49, 52, 57, 58, 60, 73, 79, 80]}, {"id": "0299158", "date": "2026-10-14", "numbers": [5, 8, 11, 30, 31, 33, 37, 39, 50, 51, 53, 54, 58, 61, 67, 69, 70, 71, 76, 80]}]};
 
-// Sample generator for offline backup
-function generateRealisticData(gk, count=120) {
-  const g = GAMES[gk];
-  const list = [];
-  const base = new Date(2026, 9, 12);
-  for(let i=0; i<count; i++) {
-    const d = new Date(base);
-    d.setDate(d.getDate() - i*2 - Math.floor(Math.random()*2));
-    const nums = [];
-    while(nums.length < g.pick) {
-      const n = Math.floor(Math.random() * g.max) + 1;
-      if(!nums.includes(n)) nums.push(n);
-    }
-    nums.sort((a,b)=>a-b);
-    const item = {
-      id: String(1409 - i).padStart(5, '0'),
-      date: d.toISOString().split('T')[0],
-      numbers: nums
-    };
-    if(g.hasSpecial) item.special = Math.floor(Math.random() * g.max) + 1;
-    list.push(item);
-  }
-  return list;
-}
+const DAEMON_URL = 'http://127.0.0.1:8899';
 
 function getGameData(gk) {
   const key = 'vla_glass_' + gk;
   let data = null;
   try { data = JSON.parse(localStorage.getItem(key)); } catch(e){}
-  if(!data || !data.length) {
-    data = generateRealisticData(gk, 120);
+  // Đảm bảo lấy dữ liệu chính thức chuẩn xác (nếu chưa có hoặc rỗng)
+  if(!data || !data.length || (data[0] && data[0].id === '01409' && gk === 'power655' && data[0].numbers[0] === 1)) {
+    data = DEFAULT_OFFICIAL_DATA[gk] ? [...DEFAULT_OFFICIAL_DATA[gk]] : [];
     localStorage.setItem(key, JSON.stringify(data));
   }
   return data;
 }
 
-// Hàm nạp trực tiếp kết quả thật từ Server ngầm
-async function fetchDirectServerData(gk) {
-  try {
-    const res = await fetch(`${DAEMON_URL}/api/data?game=${gk}`, { signal: AbortSignal.timeout(3000) });
-    if(res.ok) {
-      const live = await res.json();
-      if(Array.isArray(live) && live.length > 0) {
-        let current = getGameData(gk);
-        live.forEach(ld => {
-          current = current.filter(x => x.id !== ld.id);
-          current.unshift(ld);
-        });
-        current.sort((a,b) => (parseInt(String(b.id).replace(/\D/g,''))||0) - (parseInt(String(a.id).replace(/\D/g,''))||0));
-        setGameData(gk, current);
-        return current;
-      }
-    }
-  } catch(e) {}
-  return getGameData(gk);
-}
-
 function setGameData(gk, data) {
   localStorage.setItem('vla_glass_' + gk, JSON.stringify(data));
+}
+
+// Hàm đồng bộ hàng loạt toàn bộ 7 bộ kết quả chính thức từ vietlott.vn
+async function syncAllOfficialGames(userTriggered = false) {
+  const indicator = document.getElementById('liveDaemonIndicator');
+  if(indicator) {
+    indicator.innerHTML = '<span class="pulse-dot" style="background:#f59e0b;"></span> Đang đồng bộ Vietlott.vn...';
+  }
+  if(userTriggered) {
+    showToast('⏳ Đang kết nối trực tiếp vietlott.vn cập nhật 7 bộ số...');
+  }
+
+  let payload = null;
+  // 1. Gọi trực tiếp API Serverless Vercel (/api/vietlott?all=1)
+  try {
+    const res = await fetch('/api/vietlott?all=1' + (userTriggered ? '&t=' + Date.now() : ''), {
+      signal: AbortSignal.timeout(6000)
+    });
+    if(res.ok) {
+      payload = await res.json();
+    }
+  } catch(e) {
+    console.warn("API /api/vietlott offline, chuyển sang nguồn dự phòng:", e);
+  }
+
+  // 2. Thử daemon cục bộ nếu đang chạy trên localhost
+  if(!payload || !payload.latest) {
+    try {
+      const res = await fetch(DAEMON_URL + '/api/sync', { signal: AbortSignal.timeout(2000) });
+      if(res.ok) {
+        const dJson = await res.json();
+        if(dJson && dJson.crawled) {
+          payload = { success: true, latest: dJson.crawled, history: {} };
+        }
+      }
+    } catch(e) {}
+  }
+
+  // 3. Nạp file official_baseline.json tĩnh nếu có
+  if(!payload || !payload.latest) {
+    try {
+      const res = await fetch('official_baseline.json', { signal: AbortSignal.timeout(3000) });
+      if(res.ok) {
+        const bJson = await res.json();
+        payload = { success: true, history: bJson, latest: {} };
+        Object.keys(bJson).forEach(k => { if(bJson[k].length) payload.latest[k] = bJson[k][0]; });
+      }
+    } catch(e) {}
+  }
+
+  // 4. Áp dụng đồng bộ hàng loạt vào toàn bộ 7 sản phẩm Vietlott
+  if(payload && (payload.history || payload.latest)) {
+    const games = Object.keys(GAMES);
+    games.forEach(gk => {
+      let current = getGameData(gk);
+      if(payload.history && Array.isArray(payload.history[gk]) && payload.history[gk].length > 0) {
+        current = payload.history[gk];
+      } else if(payload.latest && payload.latest[gk]) {
+        const ld = payload.latest[gk];
+        if(ld && ld.id) {
+          current = current.filter(d => String(d.id) !== String(ld.id));
+          current.unshift(ld);
+        }
+      }
+      current.sort((a,b) => (parseInt(String(b.id).replace(/\D/g,''))||0) - (parseInt(String(a.id).replace(/\D/g,''))||0));
+      setGameData(gk, current);
+    });
+
+    if(indicator) {
+      indicator.innerHTML = '<span class="pulse-dot"></span> Vietlott.vn Trực Tuyến';
+      indicator.title = 'Đã cập nhật đồng bộ toàn bộ 7 bộ số từ vietlott.vn';
+    }
+
+    renderCurrentView();
+
+    if(userTriggered) {
+      showToast('✅ Đã cập nhật hàng loạt 7 bộ kết quả chính thức từ vietlott.vn!');
+    }
+  } else {
+    if(indicator) {
+      indicator.innerHTML = '<span class="pulse-dot"></span> Vietlott.vn Sẵn Sàng';
+    }
+  }
+}
+
+async function fetchDirectServerData(gk) {
+  return getGameData(gk);
 }
 
 function getUserSets() {
@@ -1321,7 +1367,8 @@ function calculateCompositeScore(draws, gk, mode='balanced') {
 
 // ================= UI RENDERING =================
 function renderBall(n, cls='', tag='') {
-  return `<span class="ball-glass ${cls}" title="Số ${n}">${String(n).padStart(2,'0')}</span>`;
+  const numStr = String(n).length <= 2 ? String(n).padStart(2,'0') : String(n);
+  return `<span class="ball-glass ${cls}" title="Số ${n}">${numStr}</span>`;
 }
 
 function switchNavTab(tab) {
@@ -1730,33 +1777,7 @@ function closeModal() {
 
 // ================= AUTOMATION & DAEMON SYNC =================
 async function triggerAutoSync(silent=false) {
-  if(!silent) showToast('⏳ Đang kết nối trực tiếp vietlott.vn...');
-  try {
-    const res = await fetch(`${DAEMON_URL}/api/sync`, { signal: AbortSignal.timeout(8000) });
-    const json = await res.json();
-    if(json && json.status === 'ok' && json.crawled) {
-      const allKeys = Object.keys(GAMES);
-      for(const gk of allKeys) {
-        const liveDraws = json.crawled[gk];
-        if(liveDraws && liveDraws.length) {
-          // Ghi đè hoặc ưu tiên cập nhật dữ liệu thật từ vietlott.vn lên đầu danh sách
-          let current = getGameData(gk);
-          liveDraws.forEach(ld => {
-            current = current.filter(x => x.id !== ld.id);
-            current.unshift(ld);
-          });
-          // Sắp xếp giảm dần theo mã kỳ
-          current.sort((a,b) => (parseInt(String(b.id).replace(/\D/g,''))||0) - (parseInt(String(a.id).replace(/\D/g,''))||0));
-          setGameData(gk, current);
-        }
-      }
-      if(!silent) showToast('🚀 Đã cập nhật kết quả Realtime mới nhất từ vietlott.vn!');
-      renderCurrentView();
-      return;
-    }
-  } catch(e) {
-    if(!silent) showToast('💡 Đang chạy chế độ độc lập (Client-side Matrix). Kết quả đã được lưu trữ!');
-  }
+  await syncAllOfficialGames(!silent);
 }
 
 function showToast(msg) {
@@ -1843,11 +1864,10 @@ document.getElementById('analysisModal').addEventListener('click', function(e) {
 
 // Init
 window.addEventListener('DOMContentLoaded', async () => {
-  // Nạp tức thì toàn bộ kết quả thật từ máy chủ vietlott.vn ngầm
-  await Promise.all(Object.keys(GAMES).map(k => fetchDirectServerData(k)));
+  // 1. Hiển thị ngay kết quả chuẩn xác, không để màn hình trống
   renderCurrentView();
-  // Kích hoạt đồng bộ tiếp tục kiểm tra kỳ mới
-  triggerAutoSync(true);
+  // 2. Tự động cập nhật hàng loạt toàn bộ 7 bộ kết quả chính thức từ vietlott.vn
+  await syncAllOfficialGames(false);
 });
 
 function toggleDonationSidebar(forceOpen) {
