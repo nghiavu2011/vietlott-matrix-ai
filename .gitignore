@@ -1,0 +1,11 @@
+# Local environment & secret tokens
+.env
+*.log
+__pycache__/
+winning_535.html
+test_*.py
+find_*.py
+dump_*.py
+check_*.py
+parse_*.py
+.vercel
