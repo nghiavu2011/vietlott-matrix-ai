@@ -9,3 +9,5 @@ dump_*.py
 check_*.py
 parse_*.py
 .vercel
+automation_daemon.py
+live_*.json
