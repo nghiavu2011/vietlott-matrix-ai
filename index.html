@@ -747,6 +747,47 @@ body {
 }
 .auth-divider span { padding: 0 8px; }
 
+.auth-tab-switch {
+  display: flex;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 4px;
+  border-radius: 30px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+.auth-tab-btn {
+  flex: 1;
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.auth-tab-btn.active {
+  background: #fff;
+  color: #7c3aed;
+  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.15);
+}
+
+.auth-quote-badge {
+  background: linear-gradient(135deg, rgba(254, 243, 199, 0.8) 0%, rgba(243, 232, 255, 0.8) 100%);
+  border: 1px dashed rgba(245, 158, 11, 0.4);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  text-align: center;
+  font-size: 0.82em;
+  font-weight: 800;
+  color: #b45309;
+  font-style: italic;
+  margin: 6px auto 12px;
+  line-height: 1.45;
+}
+
 /* ====================================================
    CHANCE VS CHOICE (MAY RỦI VÀ LỰA CHỌN) BANNER
    ==================================================== */
@@ -2170,6 +2211,13 @@ function closeAuthModal() {
   }
 }
 
+let currentAuthTab = 'register'; // 'register' | 'login'
+
+function switchAuthTab(tab) {
+  currentAuthTab = tab;
+  renderAuthModalContent(true);
+}
+
 function renderAuthModalContent(isGatekeeper = false) {
   const body = document.getElementById('authModalBody');
   if (!body) return;
@@ -2181,8 +2229,8 @@ function renderAuthModalContent(isGatekeeper = false) {
     const displayEmail = currentUserProfile.email || 'Chưa liên kết Email';
 
     body.innerHTML = `
-      <div style="text-align:center; margin-bottom:16px;">
-        <div style="width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ec4899); display:inline-flex; align-items:center; justify-content:center; font-size:1.8em; color:#fff; box-shadow:0 8px 20px rgba(245,158,11,0.35); margin-bottom:8px;">
+      <div style="text-align:center; margin-bottom:14px;">
+        <div style="width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ec4899); display:inline-flex; align-items:center; justify-content:center; font-size:1.8em; color:#fff; box-shadow:0 8px 20px rgba(245,158,11,0.35); margin-bottom:8px;">
           👑
         </div>
         <div style="font-size:1.2em; font-weight:800; color:var(--text-main);">${displayName}</div>
@@ -2191,7 +2239,11 @@ function renderAuthModalContent(isGatekeeper = false) {
         </div>
       </div>
 
-      <div style="background:rgba(255,255,255,0.7); border:1px solid var(--glass-border); border-radius:var(--radius-md); padding:14px; margin-bottom:16px; font-size:0.82em; line-height:1.7;">
+      <div class="auth-quote-badge">
+        ✨ "May mắn là ngẫu nhiên, cuộc chơi là lựa chọn!"
+      </div>
+
+      <div style="background:rgba(255,255,255,0.7); border:1px solid var(--glass-border); border-radius:var(--radius-md); padding:14px; margin-bottom:14px; font-size:0.82em; line-height:1.7;">
         <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:4px;">
           <span style="color:var(--text-muted);">Số điện thoại:</span>
           <strong>${displayPhone}</strong>
@@ -2201,7 +2253,7 @@ function renderAuthModalContent(isGatekeeper = false) {
           <strong>${displayEmail}</strong>
         </div>
         <div style="display:flex; justify-content:space-between;">
-          <span style="color:var(--text-muted);">Quyền truy cập:</span>
+          <span style="color:var(--text-muted);">Trạng thái:</span>
           <span style="color:#10b981; font-weight:800;">● Đã mở khóa toàn quyền</span>
         </div>
       </div>
@@ -2216,70 +2268,102 @@ function renderAuthModalContent(isGatekeeper = false) {
   }
 
   // Case 2: Not logged in (Gatekeeper Access Screen)
+  const isReg = currentAuthTab === 'register';
+
   body.innerHTML = `
-    <div style="text-align:center; margin-bottom:16px;">
-      <div style="display:inline-flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg, #8b5cf6, #6366f1); color:#fff; font-size:1.6em; box-shadow:0 8px 20px rgba(124,58,237,0.3); margin-bottom:10px;">
+    <div style="text-align:center; margin-bottom:12px;">
+      <div style="display:inline-flex; align-items:center; justify-content:center; width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg, #8b5cf6, #6366f1); color:#fff; font-size:1.5em; box-shadow:0 6px 16px rgba(124,58,237,0.3); margin-bottom:6px;">
         🎰
       </div>
-      <div class="card-title" style="font-size:1.2em; justify-content:center; margin-bottom:4px; color:#1e293b;">
-        CỔNG ĐĂNG NHẬP HỘI VIÊN
+      <div class="card-title" style="font-size:1.15em; justify-content:center; margin-bottom:4px; color:#1e293b;">
+        CỔNG HỘI VIÊN VIETLOTT
       </div>
-      <p style="font-size:0.78em; color:var(--text-muted); max-width:380px; margin:0 auto;">
-        Vui lòng đăng nhập để mở khóa hệ thống tính toán ma trận và phân tích xác suất Vietlott.
-      </p>
+      <div class="auth-quote-badge">
+        ✨ "May mắn là ngẫu nhiên, cuộc chơi là lựa chọn!"
+      </div>
     </div>
 
-    <!-- 1-CLICK GOOGLE LOGIN BUTTON (PRIMARY - NO REDUNDANT EMAIL NEEDED) -->
-    <div style="margin-bottom:16px;">
-      <button class="btn-glass" type="button" onclick="renderGoogleAccountChooser()" style="width:100%; justify-content:center; padding:12px; background:#fff; border:1.5px solid #e2e8f0; border-radius:var(--radius-sm); font-size:0.86em; font-weight:800; color:#1e293b; box-shadow:0 4px 12px rgba(0,0,0,0.05); gap:10px; transition:all 0.2s ease;">
-        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
-        Đăng Nhập Nhanh Bằng Google (1-Chạm)
+    <!-- 1-CLICK GOOGLE LOGIN BUTTON (NO REDUNDANT EMAIL NEEDED) -->
+    <div style="margin-bottom:12px;">
+      <button class="btn-glass" type="button" onclick="renderGoogleAccountChooser()" style="width:100%; justify-content:center; padding:11px; background:#fff; border:1.5px solid #e2e8f0; border-radius:var(--radius-sm); font-size:0.84em; font-weight:800; color:#1e293b; box-shadow:0 4px 12px rgba(0,0,0,0.05); gap:10px; transition:all 0.2s ease;">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+        Tiếp Tục Bằng Google (1-Chạm)
       </button>
     </div>
 
-    <div class="auth-divider"><span>HOẶC ĐĂNG NHẬP BẰNG SỐ ĐIỆN THOẠI</span></div>
+    <div class="auth-divider"><span>HOẶC DÙNG SỐ ĐIỆN THOẠI</span></div>
 
-    <!-- PHONE / ZALO SIGN-IN FORM: NO BIRTHDATE, NO ZODIAC, NO REDUNDANT EMAIL -->
-    <form onsubmit="submitAuthByPhone(event)" id="authLeadForm">
-      <div class="auth-input-group">
-        <label class="auth-input-label">
-          <span>Họ và Tên</span>
-          <span style="color:#ef4444;">*</span>
-        </label>
-        <input class="auth-input" id="authName" type="text" placeholder="VD: Nguyễn Thành Đạt" required />
-      </div>
-
-      <div class="auth-input-group">
-        <label class="auth-input-label">
-          <span>Số Điện Thoại (Zalo nhận thông báo kết quả)</span>
-          <span style="color:#ef4444;">*</span>
-        </label>
-        <input class="auth-input" id="authPhone" type="tel" placeholder="VD: 0985 578 385" pattern="[0-9]{9,11}" required />
-      </div>
-
-      <div class="auth-input-group">
-        <label class="auth-input-label">
-          <span>Dòng Vietlott Quan Tâm Nhất</span>
-        </label>
-        <select class="auth-input" id="authFavoriteGame">
-          <option value="power655">⚡ Power 6/55 (Jackpot khủng)</option>
-          <option value="mega645">💎 Mega 6/45</option>
-          <option value="lotto535">🍀 Lotto 5/35 (Dễ trúng)</option>
-          <option value="keno">🎰 Keno (10 phút/kỳ)</option>
-          <option value="bingo18">🎲 Bingo18</option>
-          <option value="max3d">🎯 Max 3D / Max 3D Pro</option>
-        </select>
-      </div>
-
-      <div style="font-size:0.7em; color:var(--text-muted); line-height:1.4; margin-bottom:14px; display:flex; align-items:center; gap:6px;">
-        <span>🔒</span>
-        <span>Cam kết bảo mật 100%. Thông tin chỉ dùng để thông báo kết quả khi trúng thưởng.</span>
-      </div>
-
-      <button class="btn-glass btn-primary" type="submit" id="btnSubmitAuth" style="width:100%; justify-content:center; padding:12px; font-size:0.9em;">
-        🚀 XÁC NHẬN & MỞ KHÓA TRANG CHỦ
+    <!-- TAB SWITCH: ĐĂNG KÝ / ĐĂNG NHẬP -->
+    <div class="auth-tab-switch">
+      <button class="auth-tab-btn ${isReg ? 'active' : ''}" type="button" onclick="switchAuthTab('register')">
+        📝 Đăng Ký Mới
       </button>
-    </form>
+      <button class="auth-tab-btn ${!isReg ? 'active' : ''}" type="button" onclick="switchAuthTab('login')">
+        🔑 Đăng Nhập
+      </button>
+    </div>
+
+    ${isReg ? `
+      <!-- REGISTER FORM: Name + Phone + Favorite Game -->
+      <form onsubmit="submitAuthByPhone(event, 'register')" id="authRegisterForm">
+        <div class="auth-input-group">
+          <label class="auth-input-label">
+            <span>Họ và Tên</span>
+            <span style="color:#ef4444;">*</span>
+          </label>
+          <input class="auth-input" id="authName" type="text" placeholder="VD: Nguyễn Thành Đạt" required />
+        </div>
+
+        <div class="auth-input-group">
+          <label class="auth-input-label">
+            <span>Số Điện Thoại (Zalo nhận phân tích)</span>
+            <span style="color:#ef4444;">*</span>
+          </label>
+          <input class="auth-input" id="authPhone" type="tel" placeholder="VD: 0985 578 385" pattern="[0-9]{9,11}" required />
+        </div>
+
+        <div class="auth-input-group">
+          <label class="auth-input-label">
+            <span>Dòng Vietlott Quan Tâm Nhất</span>
+          </label>
+          <select class="auth-input" id="authFavoriteGame">
+            <option value="power655">⚡ Power 6/55 (Jackpot khủng)</option>
+            <option value="mega645">💎 Mega 6/45</option>
+            <option value="lotto535">🍀 Lotto 5/35 (Dễ trúng)</option>
+            <option value="keno">🎰 Keno (10 phút/kỳ)</option>
+            <option value="bingo18">🎲 Bingo18</option>
+            <option value="max3d">🎯 Max 3D / Max 3D Pro</option>
+          </select>
+        </div>
+
+        <button class="btn-glass btn-primary" type="submit" id="btnSubmitAuth" style="width:100%; justify-content:center; padding:11px; font-size:0.88em; margin-top:4px;">
+          🚀 ĐĂNG KÝ & MỞ KHÓA TRANG CHỦ
+        </button>
+
+        <div style="text-align:center; font-size:0.75em; color:var(--text-muted); margin-top:10px;">
+          Đã có tài khoản? <a href="#" onclick="switchAuthTab('login'); return false;" style="color:#7c3aed; font-weight:800; text-decoration:none;">Đăng nhập tại đây</a>
+        </div>
+      </form>
+    ` : `
+      <!-- LOGIN FORM: Phone number only -->
+      <form onsubmit="submitAuthByPhone(event, 'login')" id="authLoginForm">
+        <div class="auth-input-group">
+          <label class="auth-input-label">
+            <span>Số Điện Thoại Đã Đăng Ký</span>
+            <span style="color:#ef4444;">*</span>
+          </label>
+          <input class="auth-input" id="authLoginPhone" type="tel" placeholder="Nhập số điện thoại của bạn" pattern="[0-9]{9,11}" required autofocus />
+        </div>
+
+        <button class="btn-glass btn-primary" type="submit" id="btnSubmitAuth" style="width:100%; justify-content:center; padding:11px; font-size:0.88em; margin-top:4px;">
+          🔑 ĐĂNG NHẬP & MỞ KHÓA TRANG CHỦ
+        </button>
+
+        <div style="text-align:center; font-size:0.75em; color:var(--text-muted); margin-top:10px;">
+          Chưa có tài khoản? <a href="#" onclick="switchAuthTab('register'); return false;" style="color:#7c3aed; font-weight:800; text-decoration:none;">Đăng ký hội viên miễn phí</a>
+        </div>
+      </form>
+    `}
   `;
 }
 
@@ -2287,36 +2371,38 @@ function renderGoogleAccountChooser() {
   const body = document.getElementById('authModalBody');
   if (!body) return;
   body.innerHTML = `
-    <div style="text-align:center; margin-bottom:16px;">
-      <svg width="34" height="34" viewBox="0 0 24 24" style="margin-bottom:6px;"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
-      <div style="font-size:1.15em; font-weight:800; color:#1e293b;">Đăng Nhập Với Google</div>
-      <p style="font-size:0.75em; color:var(--text-muted);">Email của bạn đã được xác thực tự động từ Google</p>
+    <div style="text-align:center; margin-bottom:14px;">
+      <svg width="34" height="34" viewBox="0 0 24 24" style="margin-bottom:4px;"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+      <div style="font-size:1.15em; font-weight:800; color:#1e293b;">Đăng Nhập / Đăng Ký Với Google</div>
+      <div class="auth-quote-badge" style="margin-top:6px;">
+        ✨ "May mắn là ngẫu nhiên, cuộc chơi là lựa chọn!"
+      </div>
     </div>
 
     <!-- Google Account Card (No need to re-enter email!) -->
     <div style="background:#fff; border:1.5px solid #8b5cf6; border-radius:var(--radius-md); padding:12px 14px; display:flex; align-items:center; gap:12px; margin-bottom:14px; box-shadow:0 4px 14px rgba(139,92,246,0.12);">
-      <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg, #4285F4, #34A853); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2em;">
+      <div style="width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg, #4285F4, #34A853); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2em;">
         G
       </div>
       <div style="flex:1; text-align:left;">
-        <input id="googleNameInput" type="text" value="Hội Viên Google VIP" style="font-size:0.92em; font-weight:700; border:none; outline:none; width:100%; color:#1e293b; background:transparent;" title="Nhấp để sửa tên nếu muốn" />
-        <div style="font-size:0.75em; color:#059669; font-weight:600;">✓ Email Google: user.vietlott@gmail.com (Tự động nhận diện)</div>
+        <input id="googleNameInput" type="text" value="Hội Viên Google VIP" style="font-size:0.9em; font-weight:700; border:none; outline:none; width:100%; color:#1e293b; background:transparent;" title="Nhấp để sửa tên nếu muốn" />
+        <div style="font-size:0.75em; color:#059669; font-weight:600;">✓ Email Google: user.vietlott@gmail.com</div>
       </div>
     </div>
 
     <div class="auth-input-group">
       <label class="auth-input-label">
-        <span>Số Điện Thoại / Zalo (Nhận thông báo trúng thưởng)</span>
+        <span>Số Điện Thoại / Zalo</span>
         <span style="color:#10b981; font-weight:normal;">(Tùy chọn)</span>
       </label>
       <input class="auth-input" id="googlePhoneInput" type="tel" placeholder="VD: 0985 578 385" />
     </div>
 
     <button class="btn-glass btn-primary" type="button" onclick="confirmGoogleLogin()" style="width:100%; justify-content:center; padding:12px; font-size:0.9em; margin-bottom:8px;">
-      ✓ TIẾP TỤC & MỞ KHÓA NGAY
+      ✓ XÁC NHẬN & MỞ KHÓA NGAY
     </button>
     <button class="btn-glass" type="button" onclick="renderAuthModalContent(true)" style="width:100%; justify-content:center; padding:8px; font-size:0.78em;">
-      Quay Lại Chọn Phương Thức Khác
+      Quay Lại
     </button>
   `;
 }
@@ -2334,24 +2420,50 @@ function confirmGoogleLogin() {
   });
 }
 
-function submitAuthByPhone(e) {
+function submitAuthByPhone(e, mode = 'register') {
   if (e) e.preventDefault();
-  const name = document.getElementById('authName')?.value?.trim() || 'Hội Viên Vietlott';
-  const phone = document.getElementById('authPhone')?.value?.trim() || '';
-  const favoriteGame = document.getElementById('authFavoriteGame')?.value || currentActiveGame || 'power655';
 
-  if (!phone) {
-    showToast('⚠️ Vui lòng nhập số điện thoại để tiếp tục!');
-    return;
+  if (mode === 'login') {
+    const phone = document.getElementById('authLoginPhone')?.value?.trim() || '';
+    if (!phone) {
+      showToast('⚠️ Vui lòng nhập số điện thoại để đăng nhập!');
+      return;
+    }
+    let name = 'Hội Viên Vietlott';
+    try {
+      const raw = localStorage.getItem('vla_user_profile');
+      if (raw) {
+        const prev = JSON.parse(raw);
+        if (prev.phone === phone && prev.name) name = prev.name;
+      }
+    } catch(err) {}
+
+    completeLogin({
+      name,
+      phone,
+      email: '',
+      method: 'phone_login',
+      favoriteGame: currentActiveGame || 'power655'
+    });
+  } else {
+    // Register
+    const name = document.getElementById('authName')?.value?.trim() || 'Hội Viên Vietlott';
+    const phone = document.getElementById('authPhone')?.value?.trim() || '';
+    const favoriteGame = document.getElementById('authFavoriteGame')?.value || currentActiveGame || 'power655';
+
+    if (!phone) {
+      showToast('⚠️ Vui lòng nhập số điện thoại để đăng ký!');
+      return;
+    }
+
+    completeLogin({
+      name,
+      phone,
+      email: '',
+      method: 'phone_register',
+      favoriteGame
+    });
   }
-
-  completeLogin({
-    name,
-    phone,
-    email: '',
-    method: 'phone_zalo',
-    favoriteGame
-  });
 }
 
 async function completeLogin(data) {
