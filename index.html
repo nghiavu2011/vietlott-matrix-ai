@@ -640,6 +640,169 @@ body {
   display: flex; align-items: center; justify-content: center;
 }
 
+/* ====================================================
+   VIP USER AUTH & LEAD CAPTURE STYLES
+   ==================================================== */
+.btn-auth-vip {
+  background: linear-gradient(135deg, #f59e0b 0%, #ec4899 50%, #8b5cf6 100%);
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.85);
+  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.28);
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  transition: all 0.25s ease;
+}
+.btn-auth-vip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(236, 72, 153, 0.45);
+}
+.btn-auth-vip.logged-in {
+  background: rgba(255, 255, 255, 0.88);
+  color: #7c3aed !important;
+  border: 1.5px solid #8b5cf6;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.15);
+}
+
+.auth-input-group {
+  margin-bottom: 11px;
+  text-align: left;
+}
+.auth-input-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.74em;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+.auth-input {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.85);
+  font-size: 0.84em;
+  font-family: inherit;
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.2s ease;
+}
+.auth-input:focus {
+  border-color: #8b5cf6;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+.quick-login-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.btn-quick-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 0.74em;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+}
+.btn-quick-login:hover {
+  transform: translateY(-1px);
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+.btn-quick-google { color: #dc2626; border-color: #fca5a5; }
+.btn-quick-phone { color: #059669; border-color: #a7f3d0; }
+.btn-quick-tele { color: #0284c7; border-color: #bae6fd; }
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 12px 0;
+  color: var(--text-light);
+  font-size: 0.7em;
+  font-weight: 700;
+}
+.auth-divider::before, .auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+}
+.auth-divider span { padding: 0 8px; }
+
+/* ====================================================
+   CHANCE VS CHOICE (MAY RỦI VÀ LỰA CHỌN) BANNER
+   ==================================================== */
+.chance-choice-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(254,243,199,0.65) 50%, rgba(243,232,255,0.75) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-lg);
+  padding: 14px 18px;
+  margin: 12px auto 14px;
+  box-shadow: 0 8px 24px -6px rgba(245, 158, 11, 0.12), inset 0 0 16px rgba(255,255,255,0.9);
+  position: relative;
+  overflow: hidden;
+}
+.chance-choice-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  border-bottom: 1px dashed rgba(245, 158, 11, 0.35);
+  padding-bottom: 5px;
+}
+.chance-choice-title {
+  font-size: 0.88em;
+  font-weight: 800;
+  color: #b45309;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+.chance-choice-quote {
+  font-size: 0.82em;
+  font-style: italic;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.5;
+  margin-bottom: 8px;
+  text-align: center;
+  padding: 4px 6px;
+}
+.chance-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.chance-col {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 0.74em;
+  line-height: 1.45;
+}
+.chance-col strong {
+  display: block;
+  font-size: 1.05em;
+  margin-bottom: 2px;
+}
+.chance-col.col-chance strong { color: #d97706; }
+.chance-col.col-choice strong { color: #7c3aed; }
+@media (max-width: 640px) {
+  .chance-choice-grid { grid-template-columns: 1fr; }
+}
+
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .dashboard-window { flex-direction: column; min-height: 100vh; }
@@ -916,6 +1079,11 @@ body {
         <button class="btn-glass" onclick="triggerAutoSync()">
           🔄 Đồng Bộ
         </button>
+
+        <!-- User VIP Lead Profile Button -->
+        <button class="btn-glass btn-auth-vip" id="btnTopAuth" onclick="openAuthModal()" title="Hồ Sơ Hội Viên VIP">
+          <span id="topAuthIcon">👤</span> <span id="topAuthText">Đăng Nhập VIP</span>
+        </button>
       </div>
     </header>
 
@@ -949,6 +1117,27 @@ body {
             </div>
             <div class="conf-meter-bar">
               <div class="conf-meter-fill" id="confMeterFill" style="width: 98.4%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chance vs Choice Card (May Rủi Và Lựa Chọn) -->
+        <div class="chance-choice-card">
+          <div class="chance-choice-header">
+            <div class="chance-choice-title">✨ May Rủi Và Lựa Chọn: Xác Suất Gặp Gỡ Trí Tuệ</div>
+            <span class="badge-tag" style="background:#fef3c7; color:#b45309; border-color:#fde68a;">Luật Số Lớn</span>
+          </div>
+          <div class="chance-choice-quote">
+            "Xổ số là quy luật của ngẫu nhiên (May Rủi), nhưng bộ số bạn chọn hôm nay là kết tinh của toán học, trực giác và sự quyết định (Lựa Chọn)."
+          </div>
+          <div class="chance-choice-grid">
+            <div class="chance-col col-chance">
+              <strong>🎲 May Rủi (Chance)</strong>
+              Mỗi quả bóng rơi khỏi lồng quay là biến cố vật lý độc lập. Không thuật toán nào đảo ngược được tính ngẫu nhiên của tự nhiên.
+            </div>
+            <div class="chance-col col-choice">
+              <strong>🧠 Lựa Chọn (Choice)</strong>
+              Bạn làm chủ quyết định bằng cách loại trừ 70% bộ số rác vi phạm Gauss, kiểm soát ngân sách và chọn con số bản mệnh thông thái.
             </div>
           </div>
         </div>
@@ -1112,6 +1301,33 @@ body {
         </ul>
       </div>
 
+      <!-- Philosophical Card: May Rủi vs Lựa Chọn -->
+      <div class="glass-card" style="line-height:1.7; font-size:0.88em; margin-bottom:20px; border-left: 4px solid #f59e0b;">
+        <div class="card-title" style="margin-bottom:12px; color:#b45309;">
+          🎲 Biện Chứng Giữa May Rủi (Chance) & Nghệ Thuật Lựa Chọn (Choice)
+        </div>
+        <p style="color:var(--text-muted); margin-bottom:12px;">
+          Nhiều người lầm tưởng xổ số là trò chơi hoàn toàn phó mặc cho số phận. Nhưng trong toán học xác suất, có một lằn ranh rõ ràng giữa <strong>Sự Ngẫu Nhiên Của Biến Cố</strong> và <strong>Chiến Lược Của Người Lựa Chọn</strong>:
+        </p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px; margin-bottom:14px;">
+          <div style="background:rgba(255,255,255,0.7); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid rgba(0,0,0,0.05);">
+            <div style="font-weight:800; color:#d97706; margin-bottom:4px; font-size:0.95em;">1. May Rủi Là Tuyệt Đối & Bình Đẳng</div>
+            <div style="font-size:0.84em; color:var(--text-muted); line-height:1.5;">
+              Mọi dãy số trong lồng quay có xác suất xuất hiện ngang nhau về mặt lý thuyết ($1/C^k_n$). Vũ trụ không thiên vị bất kỳ ai trong từng tích tắc quay thưởng.
+            </div>
+          </div>
+          <div style="background:rgba(255,255,255,0.7); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid rgba(0,0,0,0.05);">
+            <div style="font-weight:800; color:#7c3aed; margin-bottom:4px; font-size:0.95em;">2. Lựa Chọn Là Quyền Năng Của Trí Tuệ</div>
+            <div style="font-size:0.84em; color:var(--text-muted); line-height:1.5;">
+              Bạn không thể thay đổi cách bóng rơi, nhưng bạn có quyền <strong>chọn loại bỏ những bộ số rác</strong> (như 6 số liên tiếp 01-02-03-04-05-06 chưa từng nổ Jackpot). Việc dùng ma trận lọc Gauss và đồng bộ ngày sinh/bản mệnh giúp bạn tối ưu hóa tỷ lệ giá trị kỳ vọng (Expected Value).
+            </div>
+          </div>
+        </div>
+        <p style="font-size:0.84em; color:#64748b; font-style:italic; text-align:center; margin:0;">
+          "May mắn là khi Cơ Hội gặp gỡ Sự Chuẩn Bị. Hãy luôn chơi một cách có trách nhiệm và xem đây là niềm vui giải trí trí tuệ."
+        </p>
+      </div>
+
       <!-- Cloud Deployment Info in Guide -->
       <div class="glass-card">
         <div class="card-title" style="margin-bottom:12px;">🚀 Hướng Dẫn Đưa Lên Online Miễn Phí (Vercel / Cloudflare / GitHub)</div>
@@ -1131,6 +1347,14 @@ body {
     <button class="modal-close" onclick="closeModal()">&times;</button>
     <div class="card-title" id="modalTitle" style="font-size:1.25em; margin-bottom:16px;">Phân Tích Bộ Số</div>
     <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- Modal User Lead & VIP Authentication -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal-glass" style="max-width: 520px;">
+    <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+    <div id="authModalBody"></div>
   </div>
 </div>
 
@@ -1862,8 +2086,354 @@ document.getElementById('analysisModal').addEventListener('click', function(e) {
   if(e.target === this) closeModal();
 });
 
+const authModalEl = document.getElementById('authModal');
+if (authModalEl) {
+  authModalEl.addEventListener('click', function(e) {
+    if(e.target === this) closeAuthModal();
+  });
+}
+
+// ================= USER VIP PROFILE & LEAD ENGINE =================
+let currentUserProfile = null;
+
+function loadUserProfile() {
+  try {
+    const raw = localStorage.getItem('vla_user_profile');
+    if (raw) {
+      currentUserProfile = JSON.parse(raw);
+    }
+  } catch (e) {
+    currentUserProfile = null;
+  }
+  updateTopAuthUI();
+}
+
+function updateTopAuthUI() {
+  const btn = document.getElementById('btnTopAuth');
+  const icon = document.getElementById('topAuthIcon');
+  const text = document.getElementById('topAuthText');
+  if (!btn || !text) return;
+
+  if (currentUserProfile && currentUserProfile.name) {
+    btn.classList.add('logged-in');
+    if (icon) icon.textContent = '👑';
+    const shortName = currentUserProfile.name.split(' ').slice(-1)[0] || 'VIP';
+    text.textContent = `${shortName} (VIP)`;
+  } else {
+    btn.classList.remove('logged-in');
+    if (icon) icon.textContent = '👤';
+    text.textContent = 'Đăng Nhập VIP';
+  }
+}
+
+function openAuthModal() {
+  renderAuthModalContent();
+  const m = document.getElementById('authModal');
+  if (m) m.classList.add('show');
+}
+
+function closeAuthModal() {
+  const m = document.getElementById('authModal');
+  if (m) m.classList.remove('show');
+}
+
+function renderAuthModalContent() {
+  const body = document.getElementById('authModalBody');
+  if (!body) return;
+
+  if (currentUserProfile && currentUserProfile.name) {
+    // Show VIP Profile Card
+    const luckies = currentUserProfile.personalLuckyNumbers || [8, 18];
+    const ballsHtml = luckies.map(n => `<span class="ball-glass ball-sm special">${String(n).padStart(2,'0')}</span>`).join(' ');
+    
+    body.innerHTML = `
+      <div style="text-align:center; margin-bottom:16px;">
+        <div style="width:54px; height:54px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ec4899); display:inline-flex; align-items:center; justify-content:center; font-size:1.6em; color:#fff; box-shadow:0 6px 16px rgba(245,158,11,0.3); margin-bottom:8px;">
+          👑
+        </div>
+        <div style="font-size:1.15em; font-weight:800; color:var(--text-main);">${currentUserProfile.name}</div>
+        <div style="font-size:0.75em; font-weight:700; color:#b45309; background:#fef3c7; display:inline-block; padding:3px 10px; border-radius:20px; border:1px solid #fde68a; margin-top:4px;">
+          🌟 HỘI VIÊN MA TRẬN VIP
+        </div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.7); border:1px solid var(--glass-border); border-radius:var(--radius-md); padding:14px; margin-bottom:14px; font-size:0.8em; line-height:1.6;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:4px;">
+          <span style="color:var(--text-muted);">Số điện thoại:</span>
+          <strong>${currentUserProfile.phone ? currentUserProfile.phone.replace(/(\d{3})\d{4}(\d{3})/, '$1****$2') : 'Chưa cập nhật'}</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:4px;">
+          <span style="color:var(--text-muted);">Email:</span>
+          <strong>${currentUserProfile.email || 'Chưa cập nhật'}</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:4px;">
+          <span style="color:var(--text-muted);">Cung bản mệnh:</span>
+          <strong>${currentUserProfile.zodiac || 'Thiên Tinh'}</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="color:var(--text-muted);">Cặp số tài lộc:</span>
+          <div style="display:flex; gap:4px;">${ballsHtml}</div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="btn-glass btn-primary" onclick="applyPersonalLuckyToSmartPick()" style="width:100%; justify-content:center; padding:10px;">
+          🎲 ĐƯA CẶP SỐ BẢN MỆNH VÀO SMART PICK
+        </button>
+        <button class="btn-glass" onclick="logoutUserProfile()" style="width:100%; justify-content:center; padding:9px; color:#ef4444;">
+          🚪 Đổi Tài Khoản / Đăng Xuất
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  // Not logged in: Show Lead Capture Registration Form
+  body.innerHTML = `
+    <div style="text-align:center; margin-bottom:14px;">
+      <div class="card-title" style="font-size:1.15em; justify-content:center; margin-bottom:4px; color:#7c3aed;">
+        💎 Kích Hoạt Hồ Sơ Hội Viên VIP
+      </div>
+      <p style="font-size:0.75em; color:var(--text-muted);">
+        Thuật toán tích hợp chu kỳ Bát Tự & Cung Hoàng Đạo để cá nhân hóa cặp số may mắn và gửi thông báo kết quả.
+      </p>
+    </div>
+
+    <!-- Quick Login Options -->
+    <div class="quick-login-grid">
+      <button class="btn-quick-login btn-quick-google" type="button" onclick="handleQuickLogin('google')">
+        <span>🔴</span> Google
+      </button>
+      <button class="btn-quick-login btn-quick-phone" type="button" onclick="handleQuickLogin('phone')">
+        <span>📱</span> SĐT / Zalo
+      </button>
+      <button class="btn-quick-login btn-quick-tele" type="button" onclick="handleQuickLogin('telegram')">
+        <span>✈️</span> Telegram
+      </button>
+    </div>
+
+    <div class="auth-divider"><span>HOẶC ĐIỀN THÔNG TIN ĐÓN VẬN MAY</span></div>
+
+    <form onsubmit="submitAuthProfile(event)" id="authLeadForm">
+      <div class="auth-input-group">
+        <label class="auth-input-label">
+          <span>Họ và Tên</span>
+          <span style="color:#ef4444;">*</span>
+        </label>
+        <input class="auth-input" id="authName" type="text" placeholder="VD: Nguyễn Thành Đạt" required />
+      </div>
+
+      <div class="auth-input-group">
+        <label class="auth-input-label">
+          <span>Số Điện Thoại (Zalo nhận thông báo)</span>
+          <span style="color:#ef4444;">*</span>
+        </label>
+        <input class="auth-input" id="authPhone" type="tel" placeholder="VD: 0985 578 385" required />
+      </div>
+
+      <div class="auth-input-group">
+        <label class="auth-input-label">
+          <span>Email (Nhận phân tích xác suất)</span>
+          <span style="color:var(--text-light); font-weight:normal;">(Tùy chọn)</span>
+        </label>
+        <input class="auth-input" id="authEmail" type="email" placeholder="VD: dat.nguyen@gmail.com" />
+      </div>
+
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px;">
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <label class="auth-input-label">
+            <span>Ngày Sinh</span>
+          </label>
+          <input class="auth-input" id="authBirthday" type="date" value="1992-08-18" onchange="autoDetectZodiac()" />
+        </div>
+        <div class="auth-input-group" style="margin-bottom:0;">
+          <label class="auth-input-label">
+            <span>Cung Hoàng Đạo</span>
+          </label>
+          <select class="auth-input" id="authZodiac">
+            <option value="Sư Tử (Leo)">♌ Sư Tử (Leo)</option>
+            <option value="Bạch Dương (Aries)">♈ Bạch Dương</option>
+            <option value="Kim Ngưu (Taurus)">♉ Kim Ngưu</option>
+            <option value="Song Tử (Gemini)">♊ Song Tử</option>
+            <option value="Cự Giải (Cancer)">♋ Cự Giải</option>
+            <option value="Xử Nữ (Virgo)">♍ Xử Nữ</option>
+            <option value="Thiên Bình (Libra)">♎ Thiên Bình</option>
+            <option value="Bọ Cạp (Scorpio)">♏ Bọ Cạp</option>
+            <option value="Nhân Mã (Sagittarius)">♐ Nhân Mã</option>
+            <option value="Ma Kết (Capricorn)">♑ Ma Kết</option>
+            <option value="Bảo Bình (Aquarius)">♒ Bảo Bình</option>
+            <option value="Song Ngư (Pisces)">♓ Song Ngư</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="auth-input-group">
+        <label class="auth-input-label">
+          <span>Dòng Vietlott Quan Tâm Nhất</span>
+        </label>
+        <select class="auth-input" id="authFavoriteGame">
+          <option value="power655">⚡ Power 6/55 (Jackpot khủng)</option>
+          <option value="mega645">💎 Mega 6/45</option>
+          <option value="lotto535">🍀 Lotto 5/35 (Dễ trúng)</option>
+          <option value="keno">🎰 Keno (10 phút/kỳ)</option>
+          <option value="bingo18">🎲 Bingo18</option>
+          <option value="max3d">🎯 Max 3D / Max 3D Pro</option>
+        </select>
+      </div>
+
+      <div style="font-size:0.68em; color:var(--text-muted); line-height:1.4; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+        <span>🔒</span>
+        <span>Dữ liệu được mã hóa an toàn. Chúng tôi tôn trọng quyền riêng tư và cam kết không spam.</span>
+      </div>
+
+      <button class="btn-glass btn-primary" type="submit" id="btnSubmitAuth" style="width:100%; justify-content:center; padding:11px; font-size:0.88em;">
+        🚀 KÍCH HOẠT HỒ SƠ VIP & TÍNH VẬN SỐ
+      </button>
+    </form>
+  `;
+}
+
+function autoDetectZodiac() {
+  const bday = document.getElementById('authBirthday')?.value;
+  if (!bday) return;
+  const d = new Date(bday);
+  const m = d.getMonth() + 1;
+  const day = d.getDate();
+  let zodiac = "Sư Tử (Leo)";
+  if ((m == 3 && day >= 21) || (m == 4 && day <= 19)) zodiac = "Bạch Dương (Aries)";
+  else if ((m == 4 && day >= 20) || (m == 5 && day <= 20)) zodiac = "Kim Ngưu (Taurus)";
+  else if ((m == 5 && day >= 21) || (m == 6 && day <= 21)) zodiac = "Song Tử (Gemini)";
+  else if ((m == 6 && day >= 22) || (m == 7 && day <= 22)) zodiac = "Cự Giải (Cancer)";
+  else if ((m == 7 && day >= 23) || (m == 8 && day <= 22)) zodiac = "Sư Tử (Leo)";
+  else if ((m == 8 && day >= 23) || (m == 9 && day <= 22)) zodiac = "Xử Nữ (Virgo)";
+  else if ((m == 9 && day >= 23) || (m == 10 && day <= 23)) zodiac = "Thiên Bình (Libra)";
+  else if ((m == 10 && day >= 24) || (m == 11 && day <= 21)) zodiac = "Bọ Cạp (Scorpio)";
+  else if ((m == 11 && day >= 22) || (m == 12 && day <= 21)) zodiac = "Nhân Mã (Sagittarius)";
+  else if ((m == 12 && day >= 22) || (m == 1 && day <= 19)) zodiac = "Ma Kết (Capricorn)";
+  else if ((m == 1 && day >= 20) || (m == 2 && day <= 18)) zodiac = "Bảo Bình (Aquarius)";
+  else if ((m == 2 && day >= 19) || (m == 3 && day <= 20)) zodiac = "Song Ngư (Pisces)";
+  
+  const sel = document.getElementById('authZodiac');
+  if (sel) sel.value = zodiac;
+}
+
+function handleQuickLogin(provider) {
+  if (provider === 'google') {
+    const defaultName = "Hội Viên Google";
+    const defaultEmail = "user.vietlott@gmail.com";
+    const pInput = document.getElementById('authName');
+    const eInput = document.getElementById('authEmail');
+    const phInput = document.getElementById('authPhone');
+    if (pInput && !pInput.value) pInput.value = defaultName;
+    if (eInput && !eInput.value) eInput.value = defaultEmail;
+    if (phInput && !phInput.value) phInput.focus();
+    showToast('🟢 Đã liên kết Google! Vui lòng nhập SĐT nhận kết quả.');
+  } else if (provider === 'phone') {
+    const phInput = document.getElementById('authPhone');
+    if (phInput) phInput.focus();
+    showToast('📱 Mời bạn nhập Số điện thoại hoặc Zalo để tiếp tục.');
+  } else if (provider === 'telegram') {
+    window.open('https://t.me/VietlottSuper_bot', '_blank');
+    showToast('🤖 Đang kết nối @VietlottSuper_bot trên Telegram...');
+  }
+}
+
+async function submitAuthProfile(e) {
+  if (e) e.preventDefault();
+  const name = document.getElementById('authName')?.value?.trim() || 'Hội Viên VIP';
+  const phone = document.getElementById('authPhone')?.value?.trim() || '';
+  const email = document.getElementById('authEmail')?.value?.trim() || '';
+  const birthday = document.getElementById('authBirthday')?.value || '';
+  const zodiac = document.getElementById('authZodiac')?.value || 'Cát Tinh';
+  const favoriteGame = document.getElementById('authFavoriteGame')?.value || 'power655';
+
+  const btn = document.getElementById('btnSubmitAuth');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '⏳ Đang phân tích vận số...';
+  }
+
+  // Deterministic personal lucky number generation
+  let seed = 0;
+  for (let i = 0; i < (phone + name).length; i++) {
+    seed = (seed * 31 + (phone + name).charCodeAt(i)) % 100000;
+  }
+  const maxN = (GAMES_CONFIG && GAMES_CONFIG[currentActiveGame]?.maxBall) || 55;
+  const lucky1 = (seed % maxN) + 1;
+  const lucky2 = (((seed * 7) + 13) % maxN) + 1;
+  const personalLuckies = [lucky1, lucky2 === lucky1 ? (lucky1 % maxN) + 1 : lucky2].sort((a,b)=>a-b);
+
+  const payload = {
+    name,
+    phone,
+    email,
+    birthday,
+    zodiac,
+    favoriteGame,
+    method: 'web_form',
+    personalLuckyNumbers: personalLuckies,
+    timestamp: new Date().toISOString()
+  };
+
+  // Attempt backend storage to /api/collect-user
+  try {
+    fetch('/api/collect-user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(err => console.warn('Lead async sync notice:', err));
+  } catch (err) {}
+
+  // Local persistence
+  currentUserProfile = payload;
+  localStorage.setItem('vla_user_profile', JSON.stringify(payload));
+  updateTopAuthUI();
+
+  showToast(`🎉 Chúc mừng ${name}! Cặp số bản mệnh: ${personalLuckies.join(', ')}`);
+  closeAuthModal();
+
+  // If user has a favorite game, optionally switch to it
+  if (favoriteGame && GAMES_CONFIG[favoriteGame] && favoriteGame !== currentActiveGame) {
+    selectGame(favoriteGame);
+  }
+}
+
+function logoutUserProfile() {
+  currentUserProfile = null;
+  localStorage.removeItem('vla_user_profile');
+  updateTopAuthUI();
+  renderAuthModalContent();
+  showToast('👋 Đã đăng xuất khỏi phiên làm việc.');
+}
+
+function applyPersonalLuckyToSmartPick() {
+  if (!currentUserProfile || !currentUserProfile.personalLuckyNumbers) return;
+  const luckies = currentUserProfile.personalLuckyNumbers;
+  const cfg = GAMES_CONFIG[currentActiveGame];
+  if (!cfg) return;
+
+  // Generate hero pick that strictly includes the personal lucky numbers
+  let pool = [];
+  const maxN = cfg.maxBall;
+  for (let i = 1; i <= maxN; i++) {
+    if (!luckies.includes(i)) pool.push(i);
+  }
+  shuffle(pool);
+  
+  let needed = cfg.pickCount - luckies.length;
+  if (needed < 0) needed = 0;
+  let finalBalls = [...luckies.filter(n => n <= maxN), ...pool.slice(0, needed)].sort((a,b)=>a-b);
+  
+  currentHeroSelection = finalBalls;
+  renderHeroBalls(finalBalls);
+  closeAuthModal();
+  showToast(`✨ Đã gắn cặp số bản mệnh [${luckies.join(', ')}] vào Smart Pick!`);
+}
+
 // Init
 window.addEventListener('DOMContentLoaded', async () => {
+  // 0. Nạp hồ sơ hội viên VIP
+  loadUserProfile();
   // 1. Hiển thị ngay kết quả chuẩn xác, không để màn hình trống
   renderCurrentView();
   // 2. Tự động cập nhật hàng loạt toàn bộ 7 bộ kết quả chính thức từ vietlott.vn

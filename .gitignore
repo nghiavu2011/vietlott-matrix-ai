@@ -11,3 +11,4 @@ parse_*.py
 .vercel
 automation_daemon.py
 live_*.json
+collected_leads.json
