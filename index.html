@@ -2116,8 +2116,11 @@ function copyToClipboard(text, msg) {
 if (window.top !== window.self) {
   window.top.location = window.self.location;
 }
-// 2. Chống chuột phải ăn cắp tài sản trí tuệ và F12 view-source
+// 2. Chống chuột phải ăn cắp tài sản trí tuệ và F12 view-source (nhưng vẫn cho phép nhập liệu trên input/textarea)
 document.addEventListener('contextmenu', function(e) {
+  if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable)) {
+    return; // Cho phép chuột phải paste/copy trên ô nhập liệu
+  }
   e.preventDefault();
   showToast('🔒 Bản quyền trí tuệ thuộc N&Mstudio_. Nghiêm cấm sao chép trái phép!');
 });
@@ -2126,6 +2129,9 @@ document.addEventListener('keydown', function(e) {
   if (e.keyCode === 123 || // F12
      (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || // Ctrl+Shift+I/J/C
      (e.ctrlKey && e.keyCode === 85)) { // Ctrl+U
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+      return;
+    }
     e.preventDefault();
     showToast('🔒 Hệ thống được bảo vệ bản quyền.');
   }
@@ -2416,7 +2422,7 @@ function confirmGoogleLogin() {
     email: 'user.vietlott@gmail.com',
     phone: gPhone,
     method: 'google_oauth_1click',
-    favoriteGame: currentActiveGame || 'power655'
+    favoriteGame: currentGame || 'power655'
   });
 }
 
@@ -2425,8 +2431,8 @@ function submitAuthByPhone(e, mode = 'register') {
 
   if (mode === 'login') {
     const phone = document.getElementById('authLoginPhone')?.value?.trim() || '';
-    if (!phone) {
-      showToast('⚠️ Vui lòng nhập số điện thoại để đăng nhập!');
+    if (!phone || !/^[0-9]{9,11}$/.test(phone)) {
+      showToast('⚠️ Vui lòng nhập số điện thoại hợp lệ (9 - 11 chữ số)!');
       return;
     }
     let name = 'Hội Viên Vietlott';
@@ -2443,16 +2449,16 @@ function submitAuthByPhone(e, mode = 'register') {
       phone,
       email: '',
       method: 'phone_login',
-      favoriteGame: currentActiveGame || 'power655'
+      favoriteGame: currentGame || 'power655'
     });
   } else {
     // Register
     const name = document.getElementById('authName')?.value?.trim() || 'Hội Viên Vietlott';
     const phone = document.getElementById('authPhone')?.value?.trim() || '';
-    const favoriteGame = document.getElementById('authFavoriteGame')?.value || currentActiveGame || 'power655';
+    const favoriteGame = document.getElementById('authFavoriteGame')?.value || currentGame || 'power655';
 
-    if (!phone) {
-      showToast('⚠️ Vui lòng nhập số điện thoại để đăng ký!');
+    if (!phone || !/^[0-9]{9,11}$/.test(phone)) {
+      showToast('⚠️ Vui lòng nhập số điện thoại hợp lệ (9 - 11 chữ số)!');
       return;
     }
 
@@ -2501,7 +2507,7 @@ async function completeLogin(data) {
   showToast(`🎉 Chào mừng ${payload.name}! Đã mở khóa trang chính thành công.`);
 
   // If user has a favorite game, switch to it
-  if (payload.favoriteGame && GAMES_CONFIG[payload.favoriteGame] && payload.favoriteGame !== currentActiveGame) {
+  if (payload.favoriteGame && GAMES[payload.favoriteGame] && payload.favoriteGame !== currentGame) {
     selectGame(payload.favoriteGame);
   }
 }
