@@ -159,6 +159,18 @@ function fetchFromDaiPhat() {
   });
 }
 
+const fs = require('fs');
+const path = require('path');
+
+let baselineXSMB = [];
+try {
+  const p = path.join(process.cwd(), 'official_baseline.json');
+  if (fs.existsSync(p)) {
+    const b = JSON.parse(fs.readFileSync(p, 'utf8'));
+    if (Array.isArray(b.xsmb)) baselineXSMB = b.xsmb;
+  }
+} catch (e) {}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -183,11 +195,17 @@ module.exports = async function handler(req, res) {
     }
   }
 
+  // Merge newly crawled days with 1-2 year deep archive
+  const combinedMap = {};
+  baselineXSMB.forEach(d => combinedMap[d.date] = d);
+  xsmbList.forEach(d => combinedMap[d.date] = d);
+  const fullXSMB = Object.values(combinedMap).sort((a, b) => b.date.localeCompare(a.date));
+
   return res.status(200).json({
     success: true,
-    source: 'https://xosodaiphat.com/ (Xổ Số Miền Bắc)',
+    source: 'https://xosodaiphat.com/ & https://www.kqxs.vn/ (Xổ Số Miền Bắc 1-2 Năm)',
     timestamp: new Date().toISOString(),
-    latest: xsmbList[0] || VERIFIED_XSMB_FALLBACK[0],
-    history: xsmbList
+    latest: fullXSMB[0] || VERIFIED_XSMB_FALLBACK[0],
+    history: fullXSMB
   });
 };

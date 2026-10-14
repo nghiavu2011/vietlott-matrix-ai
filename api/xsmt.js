@@ -157,6 +157,18 @@ function fetchFromDaiPhat() {
   });
 }
 
+const fs = require('fs');
+const path = require('path');
+
+let baselineXSMT = [];
+try {
+  const p = path.join(process.cwd(), 'official_baseline.json');
+  if (fs.existsSync(p)) {
+    const b = JSON.parse(fs.readFileSync(p, 'utf8'));
+    if (Array.isArray(b.xsmt)) baselineXSMT = b.xsmt;
+  }
+} catch (e) {}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -181,11 +193,17 @@ module.exports = async function handler(req, res) {
     }
   }
 
+  // Merge newly crawled days with deep archive
+  const combinedMap = {};
+  baselineXSMT.forEach(d => combinedMap[d.date] = d);
+  xsmtList.forEach(d => combinedMap[d.date] = d);
+  const fullXSMT = Object.values(combinedMap).sort((a, b) => b.date.localeCompare(a.date));
+
   return res.status(200).json({
     success: true,
     source: 'https://xosodaiphat.com/ (Xổ Số Miền Trung)',
     timestamp: new Date().toISOString(),
-    latest: xsmtList[0] || VERIFIED_XSMT_FALLBACK[0],
-    history: xsmtList
+    latest: fullXSMT[0] || VERIFIED_XSMT_FALLBACK[0],
+    history: fullXSMT
   });
 };

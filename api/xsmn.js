@@ -167,6 +167,18 @@ function fetchFromDaiPhat() {
   });
 }
 
+const fs = require('fs');
+const path = require('path');
+
+let baselineXSMN = [];
+try {
+  const p = path.join(process.cwd(), 'official_baseline.json');
+  if (fs.existsSync(p)) {
+    const b = JSON.parse(fs.readFileSync(p, 'utf8'));
+    if (Array.isArray(b.xsmn)) baselineXSMN = b.xsmn;
+  }
+} catch (e) {}
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -191,11 +203,17 @@ module.exports = async function handler(req, res) {
     }
   }
 
+  // Merge newly crawled days with deep archive
+  const combinedMap = {};
+  baselineXSMN.forEach(d => combinedMap[d.date] = d);
+  xsmnList.forEach(d => combinedMap[d.date] = d);
+  const fullXSMN = Object.values(combinedMap).sort((a, b) => b.date.localeCompare(a.date));
+
   return res.status(200).json({
     success: true,
     source: 'https://xosodaiphat.com/ (Xổ Số Miền Nam)',
     timestamp: new Date().toISOString(),
-    latest: xsmnList[0] || VERIFIED_XSMN_FALLBACK[0],
-    history: xsmnList
+    latest: fullXSMN[0] || VERIFIED_XSMN_FALLBACK[0],
+    history: fullXSMN
   });
 };
