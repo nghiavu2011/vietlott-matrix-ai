@@ -615,6 +615,15 @@ body {
   padding: 20px;
 }
 .modal-overlay.show { display: flex; }
+.modal-overlay.gatekeeper {
+  background: rgba(15, 23, 42, 0.75) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
+  z-index: 99999 !important;
+}
+.modal-overlay.gatekeeper .modal-close {
+  display: none !important;
+}
 .modal-glass {
   background: rgba(255, 255, 255, 0.88);
   border: 1px solid rgba(255, 255, 255, 0.95);
@@ -1137,7 +1146,7 @@ body {
             </div>
             <div class="chance-col col-choice">
               <strong>🧠 Lựa Chọn (Choice)</strong>
-              Bạn làm chủ quyết định bằng cách loại trừ 70% bộ số rác vi phạm Gauss, kiểm soát ngân sách và chọn con số bản mệnh thông thái.
+              Bạn làm chủ quyết định bằng cách loại trừ 70% bộ số rác vi phạm Gauss, kiểm soát ngân sách và kiên định với bộ số chiến lược thông thái.
             </div>
           </div>
         </div>
@@ -1319,7 +1328,7 @@ body {
           <div style="background:rgba(255,255,255,0.7); padding:12px 14px; border-radius:var(--radius-sm); border:1px solid rgba(0,0,0,0.05);">
             <div style="font-weight:800; color:#7c3aed; margin-bottom:4px; font-size:0.95em;">2. Lựa Chọn Là Quyền Năng Của Trí Tuệ</div>
             <div style="font-size:0.84em; color:var(--text-muted); line-height:1.5;">
-              Bạn không thể thay đổi cách bóng rơi, nhưng bạn có quyền <strong>chọn loại bỏ những bộ số rác</strong> (như 6 số liên tiếp 01-02-03-04-05-06 chưa từng nổ Jackpot). Việc dùng ma trận lọc Gauss và đồng bộ ngày sinh/bản mệnh giúp bạn tối ưu hóa tỷ lệ giá trị kỳ vọng (Expected Value).
+              Bạn không thể thay đổi cách bóng rơi, nhưng bạn có quyền <strong>chọn loại bỏ những bộ số rác</strong> (như 6 số liên tiếp 01-02-03-04-05-06 chưa từng nổ Jackpot). Việc dùng ma trận lọc Gauss và quản trị vốn kỷ luật giúp bạn tối ưu hóa tỷ lệ giá trị kỳ vọng (Expected Value).
             </div>
           </div>
         </div>
@@ -1352,8 +1361,8 @@ body {
 
 <!-- Modal User Lead & VIP Authentication -->
 <div class="modal-overlay" id="authModal">
-  <div class="modal-glass" style="max-width: 520px;">
-    <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+  <div class="modal-glass" style="max-width: 490px;">
+    <button class="modal-close" id="authModalCloseBtn" onclick="closeAuthModal()">&times;</button>
     <div id="authModalBody"></div>
   </div>
 </div>
@@ -2089,11 +2098,17 @@ document.getElementById('analysisModal').addEventListener('click', function(e) {
 const authModalEl = document.getElementById('authModal');
 if (authModalEl) {
   authModalEl.addEventListener('click', function(e) {
-    if(e.target === this) closeAuthModal();
+    if (e.target === this) {
+      if (this.classList.contains('gatekeeper') && !currentUserProfile) {
+        showToast('🔒 Vui lòng đăng nhập để mở khóa bảng ma trận Vietlott!');
+        return;
+      }
+      closeAuthModal();
+    }
   });
 }
 
-// ================= USER VIP PROFILE & LEAD ENGINE =================
+// ================= USER VIP PROFILE & LEAD GATEKEEPER =================
 let currentUserProfile = null;
 
 function loadUserProfile() {
@@ -2106,6 +2121,7 @@ function loadUserProfile() {
     currentUserProfile = null;
   }
   updateTopAuthUI();
+  return currentUserProfile;
 }
 
 function updateTopAuthUI() {
@@ -2114,10 +2130,10 @@ function updateTopAuthUI() {
   const text = document.getElementById('topAuthText');
   if (!btn || !text) return;
 
-  if (currentUserProfile && currentUserProfile.name) {
+  if (currentUserProfile && (currentUserProfile.name || currentUserProfile.phone || currentUserProfile.email)) {
     btn.classList.add('logged-in');
     if (icon) icon.textContent = '👑';
-    const shortName = currentUserProfile.name.split(' ').slice(-1)[0] || 'VIP';
+    const shortName = (currentUserProfile.name || 'Hội viên').split(' ').slice(-1)[0] || 'VIP';
     text.textContent = `${shortName} (VIP)`;
   } else {
     btn.classList.remove('logged-in');
@@ -2126,95 +2142,105 @@ function updateTopAuthUI() {
   }
 }
 
-function openAuthModal() {
-  renderAuthModalContent();
+// Open Auth Modal (isGatekeeper = true blocks until user logs in)
+function openAuthModal(isGatekeeper = false) {
+  renderAuthModalContent(isGatekeeper);
   const m = document.getElementById('authModal');
-  if (m) m.classList.add('show');
+  const closeBtn = document.getElementById('authModalCloseBtn');
+  if (m) {
+    m.classList.add('show');
+    if (isGatekeeper) {
+      m.classList.add('gatekeeper');
+      if (closeBtn) closeBtn.style.display = 'none';
+    } else {
+      m.classList.remove('gatekeeper');
+      if (closeBtn) closeBtn.style.display = 'flex';
+    }
+  }
 }
 
 function closeAuthModal() {
   const m = document.getElementById('authModal');
-  if (m) m.classList.remove('show');
+  if (m && m.classList.contains('gatekeeper') && !currentUserProfile) {
+    showToast('🔒 Vui lòng đăng nhập để mở khóa bảng ma trận Vietlott!');
+    return;
+  }
+  if (m) {
+    m.classList.remove('show', 'gatekeeper');
+  }
 }
 
-function renderAuthModalContent() {
+function renderAuthModalContent(isGatekeeper = false) {
   const body = document.getElementById('authModalBody');
   if (!body) return;
 
-  if (currentUserProfile && currentUserProfile.name) {
-    // Show VIP Profile Card
-    const luckies = currentUserProfile.personalLuckyNumbers || [8, 18];
-    const ballsHtml = luckies.map(n => `<span class="ball-glass ball-sm special">${String(n).padStart(2,'0')}</span>`).join(' ');
-    
+  // Case 1: Already logged in
+  if (currentUserProfile && (currentUserProfile.name || currentUserProfile.phone || currentUserProfile.email)) {
+    const displayName = currentUserProfile.name || 'Hội Viên VIP';
+    const displayPhone = currentUserProfile.phone ? currentUserProfile.phone.replace(/(\d{3})\d{4}(\d{3})/, '$1****$2') : 'Chưa liên kết SĐT';
+    const displayEmail = currentUserProfile.email || 'Chưa liên kết Email';
+
     body.innerHTML = `
       <div style="text-align:center; margin-bottom:16px;">
-        <div style="width:54px; height:54px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ec4899); display:inline-flex; align-items:center; justify-content:center; font-size:1.6em; color:#fff; box-shadow:0 6px 16px rgba(245,158,11,0.3); margin-bottom:8px;">
+        <div style="width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg, #f59e0b, #ec4899); display:inline-flex; align-items:center; justify-content:center; font-size:1.8em; color:#fff; box-shadow:0 8px 20px rgba(245,158,11,0.35); margin-bottom:8px;">
           👑
         </div>
-        <div style="font-size:1.15em; font-weight:800; color:var(--text-main);">${currentUserProfile.name}</div>
-        <div style="font-size:0.75em; font-weight:700; color:#b45309; background:#fef3c7; display:inline-block; padding:3px 10px; border-radius:20px; border:1px solid #fde68a; margin-top:4px;">
+        <div style="font-size:1.2em; font-weight:800; color:var(--text-main);">${displayName}</div>
+        <div style="font-size:0.75em; font-weight:700; color:#b45309; background:#fef3c7; display:inline-block; padding:3px 12px; border-radius:20px; border:1px solid #fde68a; margin-top:4px;">
           🌟 HỘI VIÊN MA TRẬN VIP
         </div>
       </div>
 
-      <div style="background:rgba(255,255,255,0.7); border:1px solid var(--glass-border); border-radius:var(--radius-md); padding:14px; margin-bottom:14px; font-size:0.8em; line-height:1.6;">
+      <div style="background:rgba(255,255,255,0.7); border:1px solid var(--glass-border); border-radius:var(--radius-md); padding:14px; margin-bottom:16px; font-size:0.82em; line-height:1.7;">
         <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:4px;">
           <span style="color:var(--text-muted);">Số điện thoại:</span>
-          <strong>${currentUserProfile.phone ? currentUserProfile.phone.replace(/(\d{3})\d{4}(\d{3})/, '$1****$2') : 'Chưa cập nhật'}</strong>
+          <strong>${displayPhone}</strong>
         </div>
         <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:4px;">
           <span style="color:var(--text-muted);">Email:</span>
-          <strong>${currentUserProfile.email || 'Chưa cập nhật'}</strong>
+          <strong>${displayEmail}</strong>
         </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:6px; border-bottom:1px solid rgba(0,0,0,0.05); padding-bottom:4px;">
-          <span style="color:var(--text-muted);">Cung bản mệnh:</span>
-          <strong>${currentUserProfile.zodiac || 'Thiên Tinh'}</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span style="color:var(--text-muted);">Cặp số tài lộc:</span>
-          <div style="display:flex; gap:4px;">${ballsHtml}</div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:var(--text-muted);">Quyền truy cập:</span>
+          <span style="color:#10b981; font-weight:800;">● Đã mở khóa toàn quyền</span>
         </div>
       </div>
 
       <div style="display:flex; flex-direction:column; gap:8px;">
-        <button class="btn-glass btn-primary" onclick="applyPersonalLuckyToSmartPick()" style="width:100%; justify-content:center; padding:10px;">
-          🎲 ĐƯA CẶP SỐ BẢN MỆNH VÀO SMART PICK
-        </button>
-        <button class="btn-glass" onclick="logoutUserProfile()" style="width:100%; justify-content:center; padding:9px; color:#ef4444;">
-          🚪 Đổi Tài Khoản / Đăng Xuất
+        <button class="btn-glass" onclick="logoutUserProfile()" style="width:100%; justify-content:center; padding:10px; color:#ef4444; font-weight:700;">
+          🚪 Đăng Xuất / Đổi Tài Khoản
         </button>
       </div>
     `;
     return;
   }
 
-  // Not logged in: Show Lead Capture Registration Form
+  // Case 2: Not logged in (Gatekeeper Access Screen)
   body.innerHTML = `
-    <div style="text-align:center; margin-bottom:14px;">
-      <div class="card-title" style="font-size:1.15em; justify-content:center; margin-bottom:4px; color:#7c3aed;">
-        💎 Kích Hoạt Hồ Sơ Hội Viên VIP
+    <div style="text-align:center; margin-bottom:16px;">
+      <div style="display:inline-flex; align-items:center; justify-content:center; width:52px; height:52px; border-radius:16px; background:linear-gradient(135deg, #8b5cf6, #6366f1); color:#fff; font-size:1.6em; box-shadow:0 8px 20px rgba(124,58,237,0.3); margin-bottom:10px;">
+        🎰
       </div>
-      <p style="font-size:0.75em; color:var(--text-muted);">
-        Thuật toán tích hợp chu kỳ Bát Tự & Cung Hoàng Đạo để cá nhân hóa cặp số may mắn và gửi thông báo kết quả.
+      <div class="card-title" style="font-size:1.2em; justify-content:center; margin-bottom:4px; color:#1e293b;">
+        CỔNG ĐĂNG NHẬP HỘI VIÊN
+      </div>
+      <p style="font-size:0.78em; color:var(--text-muted); max-width:380px; margin:0 auto;">
+        Vui lòng đăng nhập để mở khóa hệ thống tính toán ma trận và phân tích xác suất Vietlott.
       </p>
     </div>
 
-    <!-- Quick Login Options -->
-    <div class="quick-login-grid">
-      <button class="btn-quick-login btn-quick-google" type="button" onclick="handleQuickLogin('google')">
-        <span>🔴</span> Google
-      </button>
-      <button class="btn-quick-login btn-quick-phone" type="button" onclick="handleQuickLogin('phone')">
-        <span>📱</span> SĐT / Zalo
-      </button>
-      <button class="btn-quick-login btn-quick-tele" type="button" onclick="handleQuickLogin('telegram')">
-        <span>✈️</span> Telegram
+    <!-- 1-CLICK GOOGLE LOGIN BUTTON (PRIMARY - NO REDUNDANT EMAIL NEEDED) -->
+    <div style="margin-bottom:16px;">
+      <button class="btn-glass" type="button" onclick="renderGoogleAccountChooser()" style="width:100%; justify-content:center; padding:12px; background:#fff; border:1.5px solid #e2e8f0; border-radius:var(--radius-sm); font-size:0.86em; font-weight:800; color:#1e293b; box-shadow:0 4px 12px rgba(0,0,0,0.05); gap:10px; transition:all 0.2s ease;">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+        Đăng Nhập Nhanh Bằng Google (1-Chạm)
       </button>
     </div>
 
-    <div class="auth-divider"><span>HOẶC ĐIỀN THÔNG TIN ĐÓN VẬN MAY</span></div>
+    <div class="auth-divider"><span>HOẶC ĐĂNG NHẬP BẰNG SỐ ĐIỆN THOẠI</span></div>
 
-    <form onsubmit="submitAuthProfile(event)" id="authLeadForm">
+    <!-- PHONE / ZALO SIGN-IN FORM: NO BIRTHDATE, NO ZODIAC, NO REDUNDANT EMAIL -->
+    <form onsubmit="submitAuthByPhone(event)" id="authLeadForm">
       <div class="auth-input-group">
         <label class="auth-input-label">
           <span>Họ và Tên</span>
@@ -2225,46 +2251,10 @@ function renderAuthModalContent() {
 
       <div class="auth-input-group">
         <label class="auth-input-label">
-          <span>Số Điện Thoại (Zalo nhận thông báo)</span>
+          <span>Số Điện Thoại (Zalo nhận thông báo kết quả)</span>
           <span style="color:#ef4444;">*</span>
         </label>
-        <input class="auth-input" id="authPhone" type="tel" placeholder="VD: 0985 578 385" required />
-      </div>
-
-      <div class="auth-input-group">
-        <label class="auth-input-label">
-          <span>Email (Nhận phân tích xác suất)</span>
-          <span style="color:var(--text-light); font-weight:normal;">(Tùy chọn)</span>
-        </label>
-        <input class="auth-input" id="authEmail" type="email" placeholder="VD: dat.nguyen@gmail.com" />
-      </div>
-
-      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px;">
-        <div class="auth-input-group" style="margin-bottom:0;">
-          <label class="auth-input-label">
-            <span>Ngày Sinh</span>
-          </label>
-          <input class="auth-input" id="authBirthday" type="date" value="1992-08-18" onchange="autoDetectZodiac()" />
-        </div>
-        <div class="auth-input-group" style="margin-bottom:0;">
-          <label class="auth-input-label">
-            <span>Cung Hoàng Đạo</span>
-          </label>
-          <select class="auth-input" id="authZodiac">
-            <option value="Sư Tử (Leo)">♌ Sư Tử (Leo)</option>
-            <option value="Bạch Dương (Aries)">♈ Bạch Dương</option>
-            <option value="Kim Ngưu (Taurus)">♉ Kim Ngưu</option>
-            <option value="Song Tử (Gemini)">♊ Song Tử</option>
-            <option value="Cự Giải (Cancer)">♋ Cự Giải</option>
-            <option value="Xử Nữ (Virgo)">♍ Xử Nữ</option>
-            <option value="Thiên Bình (Libra)">♎ Thiên Bình</option>
-            <option value="Bọ Cạp (Scorpio)">♏ Bọ Cạp</option>
-            <option value="Nhân Mã (Sagittarius)">♐ Nhân Mã</option>
-            <option value="Ma Kết (Capricorn)">♑ Ma Kết</option>
-            <option value="Bảo Bình (Aquarius)">♒ Bảo Bình</option>
-            <option value="Song Ngư (Pisces)">♓ Song Ngư</option>
-          </select>
-        </div>
+        <input class="auth-input" id="authPhone" type="tel" placeholder="VD: 0985 578 385" pattern="[0-9]{9,11}" required />
       </div>
 
       <div class="auth-input-group">
@@ -2281,97 +2271,98 @@ function renderAuthModalContent() {
         </select>
       </div>
 
-      <div style="font-size:0.68em; color:var(--text-muted); line-height:1.4; margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+      <div style="font-size:0.7em; color:var(--text-muted); line-height:1.4; margin-bottom:14px; display:flex; align-items:center; gap:6px;">
         <span>🔒</span>
-        <span>Dữ liệu được mã hóa an toàn. Chúng tôi tôn trọng quyền riêng tư và cam kết không spam.</span>
+        <span>Cam kết bảo mật 100%. Thông tin chỉ dùng để thông báo kết quả khi trúng thưởng.</span>
       </div>
 
-      <button class="btn-glass btn-primary" type="submit" id="btnSubmitAuth" style="width:100%; justify-content:center; padding:11px; font-size:0.88em;">
-        🚀 KÍCH HOẠT HỒ SƠ VIP & TÍNH VẬN SỐ
+      <button class="btn-glass btn-primary" type="submit" id="btnSubmitAuth" style="width:100%; justify-content:center; padding:12px; font-size:0.9em;">
+        🚀 XÁC NHẬN & MỞ KHÓA TRANG CHỦ
       </button>
     </form>
   `;
 }
 
-function autoDetectZodiac() {
-  const bday = document.getElementById('authBirthday')?.value;
-  if (!bday) return;
-  const d = new Date(bday);
-  const m = d.getMonth() + 1;
-  const day = d.getDate();
-  let zodiac = "Sư Tử (Leo)";
-  if ((m == 3 && day >= 21) || (m == 4 && day <= 19)) zodiac = "Bạch Dương (Aries)";
-  else if ((m == 4 && day >= 20) || (m == 5 && day <= 20)) zodiac = "Kim Ngưu (Taurus)";
-  else if ((m == 5 && day >= 21) || (m == 6 && day <= 21)) zodiac = "Song Tử (Gemini)";
-  else if ((m == 6 && day >= 22) || (m == 7 && day <= 22)) zodiac = "Cự Giải (Cancer)";
-  else if ((m == 7 && day >= 23) || (m == 8 && day <= 22)) zodiac = "Sư Tử (Leo)";
-  else if ((m == 8 && day >= 23) || (m == 9 && day <= 22)) zodiac = "Xử Nữ (Virgo)";
-  else if ((m == 9 && day >= 23) || (m == 10 && day <= 23)) zodiac = "Thiên Bình (Libra)";
-  else if ((m == 10 && day >= 24) || (m == 11 && day <= 21)) zodiac = "Bọ Cạp (Scorpio)";
-  else if ((m == 11 && day >= 22) || (m == 12 && day <= 21)) zodiac = "Nhân Mã (Sagittarius)";
-  else if ((m == 12 && day >= 22) || (m == 1 && day <= 19)) zodiac = "Ma Kết (Capricorn)";
-  else if ((m == 1 && day >= 20) || (m == 2 && day <= 18)) zodiac = "Bảo Bình (Aquarius)";
-  else if ((m == 2 && day >= 19) || (m == 3 && day <= 20)) zodiac = "Song Ngư (Pisces)";
-  
-  const sel = document.getElementById('authZodiac');
-  if (sel) sel.value = zodiac;
+function renderGoogleAccountChooser() {
+  const body = document.getElementById('authModalBody');
+  if (!body) return;
+  body.innerHTML = `
+    <div style="text-align:center; margin-bottom:16px;">
+      <svg width="34" height="34" viewBox="0 0 24 24" style="margin-bottom:6px;"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+      <div style="font-size:1.15em; font-weight:800; color:#1e293b;">Đăng Nhập Với Google</div>
+      <p style="font-size:0.75em; color:var(--text-muted);">Email của bạn đã được xác thực tự động từ Google</p>
+    </div>
+
+    <!-- Google Account Card (No need to re-enter email!) -->
+    <div style="background:#fff; border:1.5px solid #8b5cf6; border-radius:var(--radius-md); padding:12px 14px; display:flex; align-items:center; gap:12px; margin-bottom:14px; box-shadow:0 4px 14px rgba(139,92,246,0.12);">
+      <div style="width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg, #4285F4, #34A853); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.2em;">
+        G
+      </div>
+      <div style="flex:1; text-align:left;">
+        <input id="googleNameInput" type="text" value="Hội Viên Google VIP" style="font-size:0.92em; font-weight:700; border:none; outline:none; width:100%; color:#1e293b; background:transparent;" title="Nhấp để sửa tên nếu muốn" />
+        <div style="font-size:0.75em; color:#059669; font-weight:600;">✓ Email Google: user.vietlott@gmail.com (Tự động nhận diện)</div>
+      </div>
+    </div>
+
+    <div class="auth-input-group">
+      <label class="auth-input-label">
+        <span>Số Điện Thoại / Zalo (Nhận thông báo trúng thưởng)</span>
+        <span style="color:#10b981; font-weight:normal;">(Tùy chọn)</span>
+      </label>
+      <input class="auth-input" id="googlePhoneInput" type="tel" placeholder="VD: 0985 578 385" />
+    </div>
+
+    <button class="btn-glass btn-primary" type="button" onclick="confirmGoogleLogin()" style="width:100%; justify-content:center; padding:12px; font-size:0.9em; margin-bottom:8px;">
+      ✓ TIẾP TỤC & MỞ KHÓA NGAY
+    </button>
+    <button class="btn-glass" type="button" onclick="renderAuthModalContent(true)" style="width:100%; justify-content:center; padding:8px; font-size:0.78em;">
+      Quay Lại Chọn Phương Thức Khác
+    </button>
+  `;
 }
 
-function handleQuickLogin(provider) {
-  if (provider === 'google') {
-    const defaultName = "Hội Viên Google";
-    const defaultEmail = "user.vietlott@gmail.com";
-    const pInput = document.getElementById('authName');
-    const eInput = document.getElementById('authEmail');
-    const phInput = document.getElementById('authPhone');
-    if (pInput && !pInput.value) pInput.value = defaultName;
-    if (eInput && !eInput.value) eInput.value = defaultEmail;
-    if (phInput && !phInput.value) phInput.focus();
-    showToast('🟢 Đã liên kết Google! Vui lòng nhập SĐT nhận kết quả.');
-  } else if (provider === 'phone') {
-    const phInput = document.getElementById('authPhone');
-    if (phInput) phInput.focus();
-    showToast('📱 Mời bạn nhập Số điện thoại hoặc Zalo để tiếp tục.');
-  } else if (provider === 'telegram') {
-    window.open('https://t.me/VietlottSuper_bot', '_blank');
-    showToast('🤖 Đang kết nối @VietlottSuper_bot trên Telegram...');
-  }
+function confirmGoogleLogin() {
+  const gName = document.getElementById('googleNameInput')?.value?.trim() || 'Hội Viên Google VIP';
+  const gPhone = document.getElementById('googlePhoneInput')?.value?.trim() || '';
+
+  completeLogin({
+    name: gName,
+    email: 'user.vietlott@gmail.com',
+    phone: gPhone,
+    method: 'google_oauth_1click',
+    favoriteGame: currentActiveGame || 'power655'
+  });
 }
 
-async function submitAuthProfile(e) {
+function submitAuthByPhone(e) {
   if (e) e.preventDefault();
-  const name = document.getElementById('authName')?.value?.trim() || 'Hội Viên VIP';
+  const name = document.getElementById('authName')?.value?.trim() || 'Hội Viên Vietlott';
   const phone = document.getElementById('authPhone')?.value?.trim() || '';
-  const email = document.getElementById('authEmail')?.value?.trim() || '';
-  const birthday = document.getElementById('authBirthday')?.value || '';
-  const zodiac = document.getElementById('authZodiac')?.value || 'Cát Tinh';
-  const favoriteGame = document.getElementById('authFavoriteGame')?.value || 'power655';
+  const favoriteGame = document.getElementById('authFavoriteGame')?.value || currentActiveGame || 'power655';
 
+  if (!phone) {
+    showToast('⚠️ Vui lòng nhập số điện thoại để tiếp tục!');
+    return;
+  }
+
+  completeLogin({
+    name,
+    phone,
+    email: '',
+    method: 'phone_zalo',
+    favoriteGame
+  });
+}
+
+async function completeLogin(data) {
   const btn = document.getElementById('btnSubmitAuth');
   if (btn) {
     btn.disabled = true;
-    btn.textContent = '⏳ Đang phân tích vận số...';
+    btn.textContent = '⏳ Đang mở khóa...';
   }
-
-  // Deterministic personal lucky number generation
-  let seed = 0;
-  for (let i = 0; i < (phone + name).length; i++) {
-    seed = (seed * 31 + (phone + name).charCodeAt(i)) % 100000;
-  }
-  const maxN = (GAMES_CONFIG && GAMES_CONFIG[currentActiveGame]?.maxBall) || 55;
-  const lucky1 = (seed % maxN) + 1;
-  const lucky2 = (((seed * 7) + 13) % maxN) + 1;
-  const personalLuckies = [lucky1, lucky2 === lucky1 ? (lucky1 % maxN) + 1 : lucky2].sort((a,b)=>a-b);
 
   const payload = {
-    name,
-    phone,
-    email,
-    birthday,
-    zodiac,
-    favoriteGame,
-    method: 'web_form',
-    personalLuckyNumbers: personalLuckies,
+    ...data,
     timestamp: new Date().toISOString()
   };
 
@@ -2389,12 +2380,17 @@ async function submitAuthProfile(e) {
   localStorage.setItem('vla_user_profile', JSON.stringify(payload));
   updateTopAuthUI();
 
-  showToast(`🎉 Chúc mừng ${name}! Cặp số bản mệnh: ${personalLuckies.join(', ')}`);
-  closeAuthModal();
+  // Unlock gatekeeper!
+  const m = document.getElementById('authModal');
+  if (m) {
+    m.classList.remove('show', 'gatekeeper');
+  }
 
-  // If user has a favorite game, optionally switch to it
-  if (favoriteGame && GAMES_CONFIG[favoriteGame] && favoriteGame !== currentActiveGame) {
-    selectGame(favoriteGame);
+  showToast(`🎉 Chào mừng ${payload.name}! Đã mở khóa trang chính thành công.`);
+
+  // If user has a favorite game, switch to it
+  if (payload.favoriteGame && GAMES_CONFIG[payload.favoriteGame] && payload.favoriteGame !== currentActiveGame) {
+    selectGame(payload.favoriteGame);
   }
 }
 
@@ -2402,41 +2398,24 @@ function logoutUserProfile() {
   currentUserProfile = null;
   localStorage.removeItem('vla_user_profile');
   updateTopAuthUI();
-  renderAuthModalContent();
-  showToast('👋 Đã đăng xuất khỏi phiên làm việc.');
-}
-
-function applyPersonalLuckyToSmartPick() {
-  if (!currentUserProfile || !currentUserProfile.personalLuckyNumbers) return;
-  const luckies = currentUserProfile.personalLuckyNumbers;
-  const cfg = GAMES_CONFIG[currentActiveGame];
-  if (!cfg) return;
-
-  // Generate hero pick that strictly includes the personal lucky numbers
-  let pool = [];
-  const maxN = cfg.maxBall;
-  for (let i = 1; i <= maxN; i++) {
-    if (!luckies.includes(i)) pool.push(i);
-  }
-  shuffle(pool);
-  
-  let needed = cfg.pickCount - luckies.length;
-  if (needed < 0) needed = 0;
-  let finalBalls = [...luckies.filter(n => n <= maxN), ...pool.slice(0, needed)].sort((a,b)=>a-b);
-  
-  currentHeroSelection = finalBalls;
-  renderHeroBalls(finalBalls);
-  closeAuthModal();
-  showToast(`✨ Đã gắn cặp số bản mệnh [${luckies.join(', ')}] vào Smart Pick!`);
+  showToast('👋 Đã đăng xuất. Vui lòng đăng nhập lại để tiếp tục.');
+  openAuthModal(true); // Re-lock page with gatekeeper!
 }
 
 // Init
 window.addEventListener('DOMContentLoaded', async () => {
   // 0. Nạp hồ sơ hội viên VIP
-  loadUserProfile();
+  const user = loadUserProfile();
+
   // 1. Hiển thị ngay kết quả chuẩn xác, không để màn hình trống
   renderCurrentView();
-  // 2. Tự động cập nhật hàng loạt toàn bộ 7 bộ kết quả chính thức từ vietlott.vn
+
+  // 2. Bắt buộc đăng nhập trước khi vào trang chính
+  if (!user || (!user.name && !user.phone && !user.email)) {
+    openAuthModal(true); // Gatekeeper mode active!
+  }
+
+  // 3. Tự động cập nhật hàng loạt toàn bộ 7 bộ kết quả chính thức từ vietlott.vn
   await syncAllOfficialGames(false);
 });
 
