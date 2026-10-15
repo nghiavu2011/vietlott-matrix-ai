@@ -1,52 +1,38 @@
-# 🚀 Hướng Dẫn Đưa Vietlott Analyzer Pro Lên Online
+# 🛡️ BẢN QUYỀN SỞ HỮU TRÍ TUỆ & ĐIỀU KHOẢN BẢO MẬT
+### COPYRIGHT & PROPRIETARY LICENSE AGREEMENT
 
-Hệ thống được thiết kế theo triết lý **Ponytail**: 100% Client-side Static Web + Tự động lưu trữ trên LocalStorage + Kết nối API đám mây. Bạn có thể triển khai lên **Vercel, Cloudflare Pages hoặc GitHub Pages** hoàn toàn **MIỄN PHÍ** trong chưa đầy 3 phút!
-
----
-
-## ⚡ Cách 1: Đưa lên GitHub Pages (Dễ nhất & Ổn định nhất)
-
-1. Mở PowerShell trong thư mục này và khởi tạo Git:
-   ```powershell
-   git init
-   git add .
-   git commit -m "feat: Glassmorphism UI Vietlott Analyzer Pro"
-   ```
-2. Tạo một Repository mới trên GitHub (ví dụ: `vietlott-analyzer`).
-3. Đẩy code lên GitHub:
-   ```powershell
-   git remote add origin https://github.com/<tai_khoan_cua_ban>/vietlott-analyzer.git
-   git branch -M main
-   git push -u origin main
-   ```
-4. Trên trang GitHub của bạn: Vào **Settings** -> **Pages** -> Chọn **Deploy from a branch** -> Chọn nhánh **main** / **root** -> Bấm **Save**.
-5. Sau 1 phút, bạn sẽ có link online: `https://<tai_khoan_cua_ban>.github.io/vietlott-analyzer/`
+**Đơn Vị Sở Hữu:** N&M Studio  
+**Bản Quyền Quốc Tế:** Copyright © 2026 N&M Studio. All rights reserved.  
+**Sản Phẩm:** Vietlott & Traditional Lottery Multi-Dimension Probability Matrix Platform  
+**Trang Web Chính Thức:** https://vietlott-matrix-ai.vercel.app  
 
 ---
 
-## ⚡ Cách 2: Đưa lên Cloudflare Pages (Tốc độ toàn cầu cực nhanh)
+## ⚖️ 1. Tuyên Bố Bản Quyền Độc Quyền (Exclusive Intellectual Property)
 
-1. Đăng nhập [dash.cloudflare.com](https://dash.cloudflare.com).
-2. Vào mục **Workers & Pages** -> Bấm **Create application** -> Chọn tab **Pages**.
-3. **Cách trực tiếp không cần Git:**
-   * Chọn **Upload assets**.
-   * Đặt tên project (ví dụ: `vietlott-pro`).
-   * Kéo thả trực tiếp file `index.html` lên.
-   * Bấm **Deploy site** -> Bạn nhận ngay tên miền miễn phí trọn đời: `https://vietlott-pro.pages.dev`!
+Toàn bộ hệ thống mã nguồn, giao diện thiết kế Glassmorphism Luxury, giải thuật Ma Trận Xác Suất Gauss 7 Tầng, công thức Thần Số Học ma phương Pythagorean, hệ cơ số Bayes động và dữ liệu bóc tách kết quả xổ số thời gian thực đều là **TÀI SẢN TRÍ TUỆ ĐỘC QUYỀN** thuộc sở hữu của **N&M Studio**.
+
+Hệ thống được phát triển phục vụ mục đích giải trí, nghiên cứu toán học xác suất chuyên sâu và dịch vụ thành viên VIP của N&M Studio.
 
 ---
 
-## ⚡ Cách 3: Đưa lên Vercel
+## 🔒 2. Quy Định Sử Dụng & Nghiêm Cấm Hành Vi Xâm Phạm
 
-1. Cài đặt Vercel CLI (nếu có): `npm i -g vercel` rồi gõ `vercel`.
-2. Hoặc đăng nhập [vercel.com](https://vercel.com) -> Import Repository GitHub từ Cách 1 -> Bấm **Deploy**.
-3. Vercel tự động cấp tên miền SSL: `https://vietlott-analyzer.vercel.app`.
+N&M Studio **NGHIÊM CẤM** các hành vi sau đây khi chưa có sự đồng ý bằng văn bản:
+1. **Sao chép hoặc Clone:** Tuyệt đối không sao chép, kéo thả, mirror hoặc tái tạo mã nguồn lên bất kỳ máy chủ cá nhân hoặc dịch vụ đám mây công cộng (Vercel, Cloudflare Pages, GitHub Pages, Render, Heroku...).
+2. **Dịch ngược & Trích xuất mã:** Cấm giải mã, de-obfuscate, debug hoặc can thiệp vào bộ nhớ runtime của thuật toán.
+3. **Crawl & Scrape Dữ Liệu:** Cấm sử dụng bot, crawler tự động để trích xuất ma trận số học hoặc danh sách số dự báo.
+4. **Phát tán & Thương mại hóa trái phép:** Mọi hành vi buôn bán, chia sẻ hoặc gán nhãn lại thương hiệu hệ thống đều sẽ bị khởi kiện và xử lý theo quy định của Luật Sở hữu Trí tuệ Việt Nam và Công ước Bern quốc tế.
 
 ---
 
-## 🤖 Về Telegram Bot (@VietlottSuper_bot) khi online
+## 🛡️ 3. Cơ Chế Tự Bảo Vệ & An Toàn Hệ Thống
 
-* **Trang web `index.html`** chạy online (Vercel / Cloudflare) sẽ hoạt động độc lập trên mọi thiết bị (iPhone, Android, Laptop) mà không cần cài đặt gì.
-* **Telegram Bot** cần một tiến trình Python chạy nền:
-  * Bạn có thể chạy trên máy tính cá nhân khi cần.
-  * Hoặc deploy script `automation_daemon.py` lên dịch vụ đám mây miễn phí như **Render.com** (Web Service miễn phí), **Railway.app**, hoặc **Koyeb** để bot chạy online 24/7.
+Hệ thống tích hợp đa lớp bảo mật:
+- **Client Integrity Guard:** Tự động vô hiệu hóa phím tắt DevTools (F12, Ctrl+Shift+I/J/C, Ctrl+U/S/P), chặn context menu, đóng băng đối tượng dữ liệu trong bộ nhớ (`Object.freeze`).
+- **Server Headers Enforcement:** Cấu hình CSP (Content Security Policy) nghiêm ngặt, chống Clickjacking (`X-Frame-Options: DENY`), chống MIME sniffing và chống chèn Iframe lén.
+- **Audit & Anti-Malware:** Ngăn chặn tuyệt đối việc nhúng mã độc bên thứ ba, lọc sạch input chống XSS.
+
+---
+
+*Mọi thắc mắc về hợp tác công nghệ hoặc bản quyền, vui lòng liên hệ trực tiếp N&M Studio.*

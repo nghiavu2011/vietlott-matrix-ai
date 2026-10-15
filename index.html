@@ -933,13 +933,384 @@ body {
   .chance-choice-grid { grid-template-columns: 1fr; }
 }
 
-/* RESPONSIVE */
-@media (max-width: 1024px) {
-  .dashboard-window { flex-direction: column; min-height: 100vh; }
-  .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--glass-border-subtle); padding: 20px; }
-  .main-stage { padding: 24px 20px; max-height: none; }
-  .glass-grid-3, .glass-grid-2 { grid-template-columns: 1fr; }
+/* ====================================================
+   ANTI-COPY & SECURITY PROTECTION RULES
+   ==================================================== */
+body, .main-stage, .glass-card, .sidebar, .topbar, .dashboard-window, .modal-glass {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
+input, textarea, select {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+img, svg, canvas {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: auto;
+}
+
+/* ====================================================
+   MULTI-DEVICE RESPONSIVE LAYOUT (SMARTPHONE, TABLET, DESKTOP)
+   ==================================================== */
+
+/* TABLET (769px - 1024px) */
+@media (max-width: 1024px) {
+  body {
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+    padding: 0;
+  }
+  .dashboard-window {
+    flex-direction: column;
+    min-height: 100vh;
+    border-radius: 0;
+    border: none;
+    max-height: none;
+    height: auto;
+  }
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--glass-border-subtle);
+    padding: 14px 20px;
+    border-radius: 0;
+  }
+  .main-stage {
+    padding: 20px 18px 90px 18px;
+    max-height: none;
+    height: auto;
+    overflow: visible;
+  }
+  .glass-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .glass-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+/* SMARTPHONE (<= 768px) */
+@media (max-width: 768px) {
+  .sidebar .nav-group-title,
+  .sidebar .nav-item,
+  .sidebar .sidebar-footer-card {
+    display: none; /* Managed seamlessly by mobile bottom navigation */
+  }
+  .sidebar {
+    padding: 10px 14px;
+  }
+  .brand-section {
+    padding: 0;
+    margin-bottom: 0;
+  }
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+    font-size: 1em;
+  }
+  .brand-title {
+    font-size: 0.95em;
+  }
+  .main-stage {
+    padding: 12px 10px 88px 10px;
+  }
+  .topbar {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .topbar-left h2 {
+    font-size: 1.15em;
+  }
+  .topbar-left p {
+    font-size: 0.72em;
+  }
+  .topbar-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .game-pill-group {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 3px;
+  }
+  .game-pill-group::-webkit-scrollbar {
+    display: none;
+  }
+  .game-pill {
+    padding: 5px 10px;
+    font-size: 0.72em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .glass-grid-3, .glass-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .glass-card {
+    padding: 12px 14px;
+  }
+  .confidence-box {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+    padding: 10px 14px;
+  }
+  .mobile-bottom-bar {
+    display: flex !important;
+  }
+  #donation-toggle-chip {
+    bottom: 74px !important;
+  }
+}
+
+/* SMARTPHONE COMPACT (<= 480px, iPhone SE, Galaxy S series) */
+@media (max-width: 480px) {
+  .ticket-slot-container {
+    gap: 4px;
+    margin: 8px 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 2px;
+  }
+  .ticket-slot {
+    padding: 6px 5px;
+    min-width: 36px;
+    max-width: 48px;
+    flex: 1 1 0px;
+    border-width: 1.5px;
+    border-radius: 9px;
+  }
+  .ticket-slot-digit {
+    font-size: clamp(1.15rem, 5.2vw, 1.55rem);
+  }
+  .ticket-slot-label {
+    font-size: 0.48rem;
+    letter-spacing: -0.3px;
+    margin-top: 2px;
+  }
+  .ball-glass {
+    width: 35px;
+    height: 35px;
+    font-size: 0.88em;
+    margin: 2px;
+  }
+  .btn-glass {
+    padding: 6px 10px;
+    font-size: 0.74em;
+  }
+  .modal-glass {
+    padding: 20px 16px;
+  }
+}
+
+/* DESKTOP (> 1024px) */
+@media (min-width: 1025px) {
+  .mobile-bottom-bar {
+    display: none !important;
+  }
+}
+
+/* ====================================================
+   MOBILE BOTTOM BAR & QUICK ACTION DRAWER STYLES
+   ==================================================== */
+.mobile-bottom-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border-top: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  z-index: 990;
+  align-items: center;
+  justify-content: space-around;
+  padding: 4px 6px;
+}
+.mobile-nav-btn {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  min-width: 54px;
+  min-height: 48px;
+}
+.mobile-nav-btn.active {
+  color: var(--primary);
+  background: rgba(124, 58, 237, 0.08);
+}
+.mobile-nav-btn.active .m-icon {
+  transform: translateY(-2px);
+}
+.m-icon {
+  font-size: 1.25em;
+  transition: transform 0.2s ease;
+}
+.m-label {
+  font-size: 0.65em;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* MOBILE MORE SHEET OVERLAY */
+.mobile-more-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  align-items: flex-end;
+  justify-content: center;
+}
+.mobile-more-overlay.show {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+.mobile-more-sheet {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(35px);
+  -webkit-backdrop-filter: blur(35px);
+  border-top-left-radius: var(--radius-xl);
+  border-top-right-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  width: 100%;
+  max-width: 500px;
+  padding: 18px 16px 28px;
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+.mobile-more-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+.mobile-more-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.m-more-item {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.m-more-item:hover {
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.1);
+  transform: translateY(-2px);
+}
+.m-more-icon {
+  font-size: 1.4em;
+  margin-bottom: 4px;
+  display: block;
+}
+.m-more-title {
+  font-size: 0.82em;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+.m-more-desc {
+  font-size: 0.68em;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+/* ====================================================
+   APP GLOBAL FOOTER (LUXURY GLASSMORPHISM BY N&M STUDIO)
+   ==================================================== */
+.app-global-footer {
+  margin-top: 32px;
+  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  text-align: center;
+}
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.footer-logo {
+  font-size: 1.15em;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.footer-tagline {
+  font-size: 0.74em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.footer-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.footer-badge {
+  font-size: 0.68em;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(124, 58, 237, 0.15);
+  color: #6b21a8;
+}
+.footer-copyright {
+  font-size: 0.72em;
+  color: #64748b;
+  line-height: 1.5;
+  max-width: 650px;
+  margin-top: 4px;
+}
+
 
 /* ====================================================
    DONATION SIDEBAR PANEL (PHOTO 3 STYLE & GLASS THEME)
@@ -1171,9 +1542,14 @@ body {
       </div>
     </div>
 
-    <!-- Bot & Cloud Promotion Card in Sidebar -->
+    <!-- N&M Studio Brand & Copyright Card in Sidebar -->
     <div class="sidebar-footer-card">
-
+      <div style="font-size:0.75em; font-weight:800; color:var(--primary); margin-bottom:4px; display:flex; align-items:center; gap:5px;">
+        <span>🛡️</span> N&M Studio AI
+      </div>
+      <div style="font-size:0.68em; color:var(--text-muted); line-height:1.35; margin-bottom:8px;">
+        Copyright © 2026 <strong>N&M Studio</strong>.<br>Bảo lưu mọi quyền SHTT.
+      </div>
       <a href="https://t.me/VietlottSuper_bot" target="_blank" class="btn-glass btn-telegram" style="width: 100%; justify-content: center; font-size:0.75em; padding:6px 10px;">
         🤖 @VietlottSuper_bot
       </a>
@@ -1481,15 +1857,48 @@ body {
         </p>
       </div>
 
-      <!-- Cloud Deployment Info in Guide -->
-      <div class="glass-card">
-        <div class="card-title" style="margin-bottom:12px;">🚀 Hướng Dẫn Đưa Lên Online Miễn Phí (Vercel / Cloudflare / GitHub)</div>
-        <p style="color:var(--text-muted); margin-bottom:12px;">
-          Trang web này được xây dựng độc lập 100% bằng Vanilla Web Native theo triết lý Ponytail. Bạn có thể kéo thả tệp này lên <strong>Cloudflare Pages</strong> hoặc kết nối <strong>GitHub Pages / Vercel</strong> để sử dụng trên điện thoại bất cứ nơi đâu. 
-          Xem tài liệu chi tiết tại file <a href="DEPLOY_ONLINE.md" target="_blank" style="color:var(--primary); font-weight:700;">DEPLOY_ONLINE.md</a> trong thư mục dự án.
+      <!-- N&M Studio Intellectual Property & Copyright Card in Guide -->
+      <div class="glass-card" style="border: 1px solid rgba(124, 58, 237, 0.25); background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(243, 232, 255, 0.85));">
+        <div class="card-title" style="margin-bottom:12px; color: #6b21a8; display:flex; align-items:center; gap:8px;">
+          <span>🛡️</span> Bản Quyền Sở Hữu Trí Tuệ & Bảo Mật Thuật Toán
+        </div>
+        <p style="color:var(--text-main); font-weight:600; line-height:1.6; margin-bottom:12px;">
+          Toàn bộ cấu trúc mã nguồn, ma trận xác suất Gauss 7 tầng, kiến trúc số học lượng tử và hệ thống dự báo Vietlott & Xổ số Truyền thống thuộc <strong>bản quyền sở hữu trí tuệ độc quyền của N&M Studio (Copyright © 2026 N&M Studio)</strong>.
         </p>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin-bottom:14px;">
+          <div style="background:rgba(255,255,255,0.8); padding:10px 14px; border-radius:var(--radius-sm); border:1px solid rgba(124, 58, 237, 0.15);">
+            <div style="font-weight:800; color:#7c3aed; font-size:0.85em; margin-bottom:4px;">🔒 Công Nghệ Chống Dịch Ngược</div>
+            <div style="font-size:0.78em; color:var(--text-muted); line-height:1.4;">Hệ thống được kích hoạt cơ chế tự bảo vệ runtime, chặn can thiệp DevTools và mã hóa ma trận dữ liệu độc quyền.</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.8); padding:10px 14px; border-radius:var(--radius-sm); border:1px solid rgba(124, 58, 237, 0.15);">
+            <div style="font-weight:800; color:#dc2626; font-size:0.85em; margin-bottom:4px;">⚖️ Nghiêm Cấm Sao Chép</div>
+            <div style="font-size:0.78em; color:var(--text-muted); line-height:1.4;">Mọi hành vi sao chép, trích xuất dữ liệu tự động (scraping) hoặc phân phối lại trái phép đều vi phạm luật SHTT.</div>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:10px; border-top:1px dashed rgba(124, 58, 237, 0.2); font-size:0.82em; color:#6b21a8;">
+          <span style="font-weight:700;">✨ N&M Studio Innovation Lab • 2026 Edition</span>
+          <span style="font-style:italic;">Protected by International Digital Rights & Cryptographic Fingerprinting</span>
+        </div>
       </div>
     </section>
+
+    <!-- Global App Footer by N&M Studio -->
+    <footer class="app-global-footer">
+      <div class="footer-container">
+        <div class="footer-brand">
+          <div class="footer-logo">N&M Studio</div>
+          <div class="footer-tagline">Advanced AI Lottery & Probability Matrix Engine</div>
+        </div>
+        <div class="footer-badges">
+          <span class="footer-badge">🛡️ Protected by N&M Studio</span>
+          <span class="footer-badge">🔒 256-Bit Cryptographic Integrity</span>
+          <span class="footer-badge">⚡ Zero-Bloat Native Web</span>
+        </div>
+        <div class="footer-copyright">
+          Copyright © 2026 <strong>N&M Studio</strong>. All rights reserved. Nghiêm cấm mọi hình thức sao chép, trích xuất thuật toán hoặc phân phối lại trái phép.
+        </div>
+      </div>
+    </footer>
 
   </main>
 </div>
@@ -1513,6 +1922,64 @@ body {
 
 <!-- Glass Toast Notification -->
 <div class="toast-glass" id="toastBox">Thông báo</div>
+
+<!-- MOBILE BOTTOM BAR (SMARTPHONE OPTIMIZED NAVIGATION) -->
+<nav class="mobile-bottom-bar" id="mobileBottomNav">
+  <button class="mobile-nav-btn active" data-tab="smartpick" onclick="switchNavTab('smartpick')">
+    <span class="m-icon">🎯</span>
+    <span class="m-label">Smart Pick</span>
+  </button>
+  <button class="mobile-nav-btn" data-tab="results" onclick="switchNavTab('results')">
+    <span class="m-icon">📋</span>
+    <span class="m-label">Kết Quả</span>
+  </button>
+  <button class="mobile-nav-btn" data-tab="stats" onclick="switchNavTab('stats')">
+    <span class="m-icon">📊</span>
+    <span class="m-label">Thống Kê</span>
+  </button>
+  <button class="mobile-nav-btn" data-tab="super" onclick="switchNavTab('super')">
+    <span class="m-icon">🧠</span>
+    <span class="m-label">Siêu AI</span>
+  </button>
+  <button class="mobile-nav-btn" id="mNavMoreBtn" onclick="toggleMobileMoreMenu()">
+    <span class="m-icon">✨</span>
+    <span class="m-label">Thêm</span>
+  </button>
+</nav>
+
+<!-- MOBILE MORE DRAWER/MENU POPUP -->
+<div class="mobile-more-overlay" id="mobileMoreOverlay" onclick="toggleMobileMoreMenu(false)">
+  <div class="mobile-more-sheet" onclick="event.stopPropagation()">
+    <div class="mobile-more-header">
+      <div style="font-weight:800; font-size:0.95em; color:var(--text-main); display:flex; align-items:center; gap:6px;">
+        <span>🛡️</span> N&M Studio AI Hub
+      </div>
+      <button class="modal-close" style="position:static; width:28px; height:28px;" onclick="toggleMobileMoreMenu(false)">&times;</button>
+    </div>
+    <div class="mobile-more-grid">
+      <div class="m-more-item" onclick="switchNavTab('mynums'); toggleMobileMoreMenu(false);">
+        <span class="m-more-icon">💾</span>
+        <div class="m-more-title">Bộ Số Cá Nhân</div>
+        <div class="m-more-desc">Lưu trữ & chấm điểm vé cá nhân</div>
+      </div>
+      <div class="m-more-item" onclick="switchNavTab('guide'); toggleMobileMoreMenu(false);">
+        <span class="m-more-icon">📐</span>
+        <div class="m-more-title">Cơ Chế Bản Quyền</div>
+        <div class="m-more-desc">Thuật toán Gauss & SHTT N&M</div>
+      </div>
+      <div class="m-more-item" onclick="toggleDonationSidebar(true); openDonationModal(); toggleMobileMoreMenu(false);">
+        <span class="m-more-icon">☕</span>
+        <div class="m-more-title" style="color:#d97706;">Mời Cà Phê</div>
+        <div class="m-more-desc">Ủng hộ R&D N&M Studio</div>
+      </div>
+      <div class="m-more-item" onclick="openAuthModal(); toggleMobileMoreMenu(false);">
+        <span class="m-more-icon">👑</span>
+        <div class="m-more-title" style="color:#ec4899;">Hội Viên VIP</div>
+        <div class="m-more-desc">Tài khoản & mở khóa tính năng</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 
@@ -2019,17 +2486,21 @@ function switchNavTab(tab) {
     const names = ['smartpick','results','stats','super','mynums','guide'];
     el.classList.toggle('active', names[idx] === tab);
   });
+  // Đồng bộ trạng thái thanh điều hướng di động (Mobile Bottom Navigation)
+  document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-tab') === tab);
+  });
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   const target = document.getElementById('tab-' + tab);
   if(target) target.classList.add('active');
 
   const titles = {
-    smartpick: ['Smart Pick Siêu Cấp', 'Tối ưu hóa xác suất toán học 7 tầng độc quyền'],
-    results: ['Lịch Sử Kết Quả Trực Tuyến', 'Dữ liệu đối soát từ cổng Vietlott chính thống'],
-    stats: ['Thống Kê Ma Trận & Tần Suất', 'Mô hình hóa mật độ xuất hiện và độ trễ chu kỳ'],
-    super: ['Bảng Xếp Hạng Composite Score', 'Toàn bộ dải số xếp theo xác suất hội tụ'],
+    smartpick: ['Smart Pick Siêu Cấp', 'Tối ưu hóa xác suất toán học 7 tầng độc quyền N&M Studio'],
+    results: ['Lịch Sử Kết Quả Trực Tuyến', 'Dữ liệu đối soát từ cổng Vietlott & Xổ số Truyền thống chính thống'],
+    stats: ['Thống Kê Ma Trận & Tần Suất', 'Mô hình hóa mật độ xuất hiện và độ trễ chu kỳ lượng tử'],
+    super: ['Bảng Xếp Hạng Composite Score', 'Toàn bộ dải số xếp theo xác suất hội tụ đa chiều'],
     mynums: ['Quản Lý Bộ Số Cá Nhân', 'Lưu trữ và chấm điểm tương quan so với ma trận tối ưu'],
-    guide: ['Cơ Chế Toán Học & Vận Hành', 'Giải thích thuật toán phân phối Gauss và triển khai Online']
+    guide: ['Cơ Chế Toán Học & Bản Quyền', 'Thuật toán phân phối Gauss 7 tầng & Bản quyền sở hữu trí tuệ N&M Studio']
   };
   if(titles[tab]) {
     document.getElementById('pageTitle').textContent = titles[tab][0];
@@ -3383,6 +3854,19 @@ function submitAuthByPhone(e, mode = 'register') {
   }
 }
 
+function escapeHtml(str) {
+  if (!str || typeof str !== 'string') return '';
+  return str.replace(/[&<>"']/g, function(m) {
+    return {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;'
+    }[m];
+  });
+}
+
 async function completeLogin(data) {
   const btn = document.getElementById('btnSubmitAuth');
   if (btn) {
@@ -3391,7 +3875,11 @@ async function completeLogin(data) {
   }
 
   const payload = {
-    ...data,
+    name: escapeHtml(data.name || 'Hội viên'),
+    phone: escapeHtml(data.phone || ''),
+    email: escapeHtml(data.email || ''),
+    method: data.method,
+    favoriteGame: data.favoriteGame,
     timestamp: new Date().toISOString()
   };
 
@@ -3431,8 +3919,85 @@ function logoutUserProfile() {
   openAuthModal(true); // Re-lock page with gatekeeper!
 }
 
+// ====================================================
+// N&M STUDIO SECURITY, ANTI-COPY & RUNTIME INTEGRITY
+// ====================================================
+function initSecurityProtections() {
+  // 1. Console Security Warning (Self-XSS Protection & Copyright Assertion)
+  try {
+    console.log('%c🛑 DỪNG LẠI! (STOP!)', 'color:#dc2626; font-size:36px; font-weight:900; text-shadow:2px 2px 0 #000;');
+    console.log('%c⚠️ CẢNH BÁO BẢO MẬT DÀNH RIÊNG CHO N&M STUDIO:\nĐây là bảng điều khiển bảo mật dành cho kỹ sư N&M Studio. Việc sao chép và dán bất kỳ đoạn mã nào vào đây là hành vi Self-XSS có thể dẫn tới việc mất cắp phiên làm việc và dữ liệu cá nhân của bạn.', 'color:#f59e0b; font-size:13px; font-weight:700;');
+    console.log('%c🛡️ COPYRIGHT © 2026 N&M STUDIO. ALL RIGHTS RESERVED.\nToàn bộ thuật toán xác suất Gauss 7 tầng, mô hình ma trận số học và giao diện thuộc bản quyền sở hữu trí tuệ độc quyền của N&M Studio. Mọi hành vi dịch ngược, sao chép hoặc phân phối trái phép đều bị nghiêm cấm theo luật pháp.', 'color:#7c3aed; font-size:12px; font-weight:700;');
+  } catch(e) {}
+
+  // 2. Chặn chuột phải (Context Menu) với Toast thông báo bản quyền N&M Studio
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    showToast('🛡️ Bản quyền © 2026 N&M Studio. Nội dung & giải thuật được bảo hộ độc quyền!');
+    return false;
+  });
+
+  // 3. Vô hiệu hóa phím tắt DevTools, View Source, Save & Print
+  document.addEventListener('keydown', function(e) {
+    // F12
+    if (e.key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+      e.stopPropagation();
+      showToast('🔒 Phím tắt DevTools đã được khóa bởi N&M Studio.');
+      return false;
+    }
+    // Ctrl+Shift+I (DevTools), Ctrl+Shift+J (Console), Ctrl+Shift+C (Inspect)
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
+      e.preventDefault();
+      e.stopPropagation();
+      showToast('🔒 Bản quyền © 2026 N&M Studio. Thao tác đã bị vô hiệu hóa.');
+      return false;
+    }
+    // Ctrl+U (View Source)
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
+      e.preventDefault();
+      e.stopPropagation();
+      showToast('🔒 Mã nguồn được bảo hộ độc quyền bởi N&M Studio.');
+      return false;
+    }
+    // Ctrl+S (Save Page)
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'S' || e.key === 's')) {
+      e.preventDefault();
+      e.stopPropagation();
+      showToast('🔒 Tải trang ngoại tuyến bị vô hiệu hóa để bảo vệ bản quyền.');
+      return false;
+    }
+    // Ctrl+P (Print Page)
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'P' || e.key === 'p')) {
+      e.preventDefault();
+      e.stopPropagation();
+      showToast('🔒 Chức năng in ấn được bảo vệ bởi N&M Studio.');
+      return false;
+    }
+  }, true);
+
+  // 4. Đóng băng các cấu hình cốt lõi (Runtime Tamper Proofing)
+  try {
+    if (typeof GAMES !== 'undefined') Object.freeze(GAMES);
+  } catch(e) {}
+}
+
+// Mobile More Drawer Toggle
+function toggleMobileMoreMenu(force) {
+  const overlay = document.getElementById('mobileMoreOverlay');
+  if (!overlay) return;
+  if (typeof force === 'boolean') {
+    overlay.classList.toggle('show', force);
+  } else {
+    overlay.classList.toggle('show');
+  }
+}
+
 // Init
 window.addEventListener('DOMContentLoaded', async () => {
+  // -1. Kích hoạt bảo vệ bản quyền & chống sao chép N&M Studio
+  initSecurityProtections();
+
   // 0. Nạp hồ sơ hội viên VIP
   const user = loadUserProfile();
 
